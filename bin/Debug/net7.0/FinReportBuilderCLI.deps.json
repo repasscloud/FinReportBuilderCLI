@@ -1,0 +1,115 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v7.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v7.0": {
+      "FinReportBuilderCLI/1.0.0": {
+        "dependencies": {
+          "Syncfusion.DocIO.Net.Core": "23.1.40"
+        },
+        "runtime": {
+          "FinReportBuilderCLI.dll": {}
+        }
+      },
+      "Microsoft.NETCore.Platforms/2.0.0": {},
+      "Syncfusion.Compression.Net.Core/23.1.40": {
+        "runtime": {
+          "lib/net7.0/Syncfusion.Compression.Portable.dll": {
+            "assemblyVersion": "23.1.40.0",
+            "fileVersion": "23.1.40.0"
+          }
+        }
+      },
+      "Syncfusion.DocIO.Net.Core/23.1.40": {
+        "dependencies": {
+          "Syncfusion.Compression.Net.Core": "23.1.40",
+          "Syncfusion.Licensing": "23.1.40",
+          "Syncfusion.OfficeChart.Net.Core": "23.1.40",
+          "System.Text.Encoding.CodePages": "4.4.0"
+        },
+        "runtime": {
+          "lib/net7.0/Syncfusion.DocIO.Portable.dll": {
+            "assemblyVersion": "23.1.40.0",
+            "fileVersion": "23.1.40.0"
+          }
+        }
+      },
+      "Syncfusion.Licensing/23.1.40": {
+        "runtime": {
+          "lib/net7.0/Syncfusion.Licensing.dll": {
+            "assemblyVersion": "23.1.40.0",
+            "fileVersion": "23.1.40.0"
+          }
+        }
+      },
+      "Syncfusion.OfficeChart.Net.Core/23.1.40": {
+        "dependencies": {
+          "Syncfusion.Compression.Net.Core": "23.1.40"
+        },
+        "runtime": {
+          "lib/net7.0/Syncfusion.OfficeChart.Portable.dll": {
+            "assemblyVersion": "23.1.40.0",
+            "fileVersion": "23.1.40.0"
+          }
+        }
+      },
+      "System.Text.Encoding.CodePages/4.4.0": {
+        "dependencies": {
+          "Microsoft.NETCore.Platforms": "2.0.0"
+        }
+      }
+    }
+  },
+  "libraries": {
+    "FinReportBuilderCLI/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Microsoft.NETCore.Platforms/2.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-VdLJOCXhZaEMY7Hm2GKiULmn7IEPFE4XC5LPSfBVCUIA8YLZVh846gtfBJalsPQF2PlzdD7ecX7DZEulJ402ZQ==",
+      "path": "microsoft.netcore.platforms/2.0.0",
+      "hashPath": "microsoft.netcore.platforms.2.0.0.nupkg.sha512"
+    },
+    "Syncfusion.Compression.Net.Core/23.1.40": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-fw5JUAN5P5A6zJSWaskouqBoJlm4SMrkqT0DEAty3nu4617f07x/+2VlW1/Q8Ikt6kwnZiI7h5o6HPGJlwf73w==",
+      "path": "syncfusion.compression.net.core/23.1.40",
+      "hashPath": "syncfusion.compression.net.core.23.1.40.nupkg.sha512"
+    },
+    "Syncfusion.DocIO.Net.Core/23.1.40": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-tUHLyJ++Z+SOYV2mFBGzDJinLgWA35V7lT85bwh6DkiD7vSsQxrZNaTpQQjIygpbLCHop3kL59VbwhzBqLLoDw==",
+      "path": "syncfusion.docio.net.core/23.1.40",
+      "hashPath": "syncfusion.docio.net.core.23.1.40.nupkg.sha512"
+    },
+    "Syncfusion.Licensing/23.1.40": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-YINuGj+/cqNPioddjV9mBYQJokXDb32e2C+NHshz1L9oPBRxfbB08dRx1c5cCdABbzQEGn2SLX8c6xj89Kv98w==",
+      "path": "syncfusion.licensing/23.1.40",
+      "hashPath": "syncfusion.licensing.23.1.40.nupkg.sha512"
+    },
+    "Syncfusion.OfficeChart.Net.Core/23.1.40": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-f0loyK5Zb8oSkNGqYw2hI7pTHHo3qPcACmdE4+OEVCMdkmyLOqS+w+7nim//Jlqo7tYrECCvtEm51iRhGZWoVQ==",
+      "path": "syncfusion.officechart.net.core/23.1.40",
+      "hashPath": "syncfusion.officechart.net.core.23.1.40.nupkg.sha512"
+    },
+    "System.Text.Encoding.CodePages/4.4.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-6JX7ZdaceBiLKLkYt8zJcp4xTJd1uYyXXEkPw6mnlUIjh1gZPIVKPtRXPmY5kLf6DwZmf5YLwR3QUrRonl7l0A==",
+      "path": "system.text.encoding.codepages/4.4.0",
+      "hashPath": "system.text.encoding.codepages.4.4.0.nupkg.sha512"
+    }
+  }
+}
