@@ -9,6 +9,13 @@
 
   <ItemGroup>
     <PackageReference Include="Syncfusion.DocIO.Net.Core" Version="23.1.40" />
+    <PackageReference Include="EPPlus" Version="6.2.10" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Book1.xlsx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Book1.xlsx" />
+  </ItemGroup>
 </Project>
