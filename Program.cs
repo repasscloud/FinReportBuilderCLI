@@ -26,41 +26,41 @@ namespace FinReportBuilderCLI
             Console.WriteLine(Path.Combine(currentDirectory, excelFilePath));
             ExcelPackage excel = new ExcelPackage(fileInfo);
 
-            int numColumns = 0;
-            int numRows = 0;
-            List<string> columnNameText = new();
+            // int numColumns = 0;
+            // int numRows = 0;
+            // List<string> columnNameText = new();
 
             // Read excel file
-            using (ExcelPackage package = new ExcelPackage(fileInfo))
-            {
-                // Get  the first worksheet
-                ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+            // using (ExcelPackage package = new ExcelPackage(fileInfo))
+            // {
+            //     // Get  the first worksheet
+            //     ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
 
-                // determine the number of columns in worksheet
-                numColumns = worksheet.Dimension.End.Column;
+            //     // determine the number of columns in worksheet
+            //     numColumns = worksheet.Dimension.End.Column;
 
-                // determine the number of rows in worksheet
-                numRows = worksheet.Dimension.End.Column;
+            //     // determine the number of rows in worksheet
+            //     numRows = worksheet.Dimension.End.Column;
 
-                // get the column names
-                string[] columnNames;
-                columnNames = new string[numColumns];
-                for (int i = 1; i <= numColumns; i++)
-                {
-                    columnNames[i - 1] = worksheet.Cells[1, i].Text;
-                    columnNameText.Add(worksheet.Cells[1, i].Text);
-                }
+            //     // get the column names
+            //     string[] columnNames;
+            //     columnNames = new string[numColumns];
+            //     for (int i = 1; i <= numColumns; i++)
+            //     {
+            //         columnNames[i - 1] = worksheet.Cells[1, i].Text;
+            //         columnNameText.Add(worksheet.Cells[1, i].Text);
+            //     }
 
-                //for (int row = 2; row <= worksheet.Dimension.End.Row; row++)
-                //{
-                //    for (int col = 1; col <= numColumns; col++)
-                //    {
-                //        string columnName = columnNames[col - 1];
-                //        string data = worksheet.Cells[row, col].Text;
-                //        Console.WriteLine($"{columnName}: {data}");
-                //    }
-                //}
-            }
+            //     //for (int row = 2; row <= worksheet.Dimension.End.Row; row++)
+            //     //{
+            //     //    for (int col = 1; col <= numColumns; col++)
+            //     //    {
+            //     //        string columnName = columnNames[col - 1];
+            //     //        string data = worksheet.Cells[row, col].Text;
+            //     //        Console.WriteLine($"{columnName}: {data}");
+            //     //    }
+            //     //}
+            // }
 
             FinancialReportService reportService = new FinancialReportService();
 

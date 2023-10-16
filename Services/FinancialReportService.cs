@@ -219,109 +219,144 @@ namespace FinReportBuilderCLI.Services
 
                 // Page03 - Read Excel File
                 ExcelPackage package = new ExcelPackage(fileInfo);
-                ExcelWorksheet page03Worksheet = package.Workbook.Worksheets[0];
+                ExcelWorksheet page03IncomeWorksheet = package.Workbook.Worksheets[0];
                 ExcelWorksheet page03ExpenditureWorksheet = package.Workbook.Worksheets[1];
 
                 // Page03 - Table of Contents
                 IWTable page3Table = section03.AddTable();
                 //page3Table.TableFormat.Borders.BorderType = BorderStyle.None;
                 page3Table.TableFormat.HorizontalAlignment = RowAlignment.Center;
-                page3Table.ResetCells(6, page03Worksheet.Dimension.End.Column);
-                page3Table.TableFormat.IsAutoResized = true;
 
-                //page3Table[0, 0].AddParagraph().AppendText("INCOME\n");
-                page3Table[0, 1].AddParagraph().AppendText("NOTES\n");
+                // add first row into table
+                WTableRow row = page3Table.AddRow();
 
-                // start the index of columnNames by skipping first 2 and switch between 1,2 or 3 columns:
-                List<string> columnNamesPage3Text = new();
-                for (int i = 1; i <= page03Worksheet.Dimension.End.Column; i++)
+                // add cells to first row (heading row)
+                WTableCell cell = row.AddCell();
+                cell.Width = 200;
+
+                cell = row.AddCell();
+                cell.AddParagraph().AppendText("NOTES\n");
+                cell.Width = 100;
+
+                int rowX = 2;
+                for (int i = 3; i <= page03IncomeWorksheet.Dimension.End.Column; i++)
                 {
-                    columnNamesPage3Text.Add(page03Worksheet.Cells[1, i].Text);
+                    cell = row.AddCell();
+                    cell.Width = 100;
+                    cell.AddParagraph().AppendText($"{page03IncomeWorksheet.Cells[1, i].Text}\n$\u00A0\u00A0\u00A0");
+                    page3Table.Rows[0].Cells[rowX].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                    rowX++;
                 }
 
-                switch (columnNamesPage3Text.Skip(2).Count())
-                {
-                    case 1:
-                        // Headers
-                        IWParagraph page3TableCol1_02 = page3Table[0, 2].AddParagraph();
-                        page3TableCol1_02.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
-                        page3TableCol1_02.AppendText($"{columnNamesPage3Text.Skip(2).ToList()[0]}\n$\u00A0\u00A0\u00A0\n");
-                        // SubHeaders
-                        IWParagraph page3TableCol1_10 = page3Table[1, 0].AddParagraph();
-                        page3TableCol1_10.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
-                        page3TableCol1_10.AppendText($"INCOME\n");
-                        // Values
-                        IWParagraph page3TableCol1_12 = page3Table[1, 2].AddParagraph();
-                        page3TableCol1_12.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
-                        page3TableCol1_12.AppendText($"$511,376.00\n");
-                        break;
-                    case 2:
-                        // Headers
-                        IWParagraph page3TableCol2_02 = page3Table[0, 2].AddParagraph();
-                        page3TableCol2_02.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
-                        page3TableCol2_02.AppendText($"{columnNamesPage3Text.Skip(2).ToList()[0]}\n$\u00A0\u00A0\u00A0");
-                        IWParagraph page3TableCol2_03 = page3Table[0, 3].AddParagraph();
-                        page3TableCol2_03.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
-                        page3TableCol2_03.AppendText($"{columnNamesPage3Text.Skip(2).ToList()[1]}\n$\u00A0\u00A0\u00A0");
-                        // SubHeaders
-                        IWParagraph page3TableCol2_10 = page3Table[1, 0].AddParagraph();
-                        page3TableCol2_10.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
-                        page3TableCol2_10.AppendText("INCOME").CharacterFormat.Bold = true;
-                        page3Table[1, 0].CellFormat.TextWrap = false;
-                        
-                        // Values
-                        IWParagraph page3TableCol2_20 = page3Table[2, 0].AddParagraph();
-                        page3TableCol2_20.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
-                        for (int row = 2; row <= page03Worksheet.Dimension.End.Row; row++)
-                        {
-                            page3TableCol2_20.AppendText($"\u00A0\u00A0{page03Worksheet.Cells[row, 1].Text}\n");
-                        }
-                        IWParagraph page3TableCol2_22 = page3Table[2, 2].AddParagraph();
-                        page3TableCol2_22.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
-                        for (int row = 2; row <= page03Worksheet.Dimension.End.Row; row++)
-                        {
-                            page3TableCol2_22.AppendText($"{page03Worksheet.Cells[row, 3].Text}\n");
-                        }
-                        IWParagraph page3TableCol2_23 = page3Table[2, 3].AddParagraph();
-                        page3TableCol2_23.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
-                        for (int row = 2; row <= page03Worksheet.Dimension.End.Row; row++)
-                        {
-                            page3TableCol2_23.AppendText($"{page03Worksheet.Cells[row, 4].Text}\n");
-                        }
+                
 
-                        // HEADERS 2
-                        IWParagraph page3TableCol2_40 = page3Table[4, 0].AddParagraph();
-                        page3TableCol2_40.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
-                        page3TableCol2_40.AppendText("EXPENDITURE").CharacterFormat.Bold = true;
+                // List<string> columnNamesPage3Text = new();
+                // for (int i = 2; i <= page03IncomeWorksheet.Dimension.End.Column; i++)
+                // {
+                //     columnNamesPage3Text.Add(page03IncomeWorksheet.Cells[1, i].Text);
+                // }
+                // for (int i = 0; i <= columnNamesPage3Text.Count; i++)
+                // {
+                //     cell = row.AddCell();
+                //     cell.AddParagraph().AppendText($"{columnNamesPage3Text[i]}");
+                // }
 
-                        // Values 2
-                        IWParagraph page3TableCol2_50 = page3Table[5, 0].AddParagraph();
+                // page3Table.ResetCells(6, page03Worksheet.Dimension.End.Column);
+                // page3Table.TableFormat.IsAutoResized = true;
+
+                // //page3Table[0, 0].AddParagraph().AppendText("INCOME\n");
+                // page3Table[0, 1].AddParagraph().AppendText("NOTES\n");
+
+                // // start the index of columnNames by skipping first 2 and switch between 1,2 or 3 columns:
+                // List<string> columnNamesPage3Text = new();
+                // for (int i = 1; i <= page03Worksheet.Dimension.End.Column; i++)
+                // {
+                //     columnNamesPage3Text.Add(page03Worksheet.Cells[1, i].Text);
+                // }
+
+                // switch (columnNamesPage3Text.Skip(2).Count())
+                // {
+                //     case 1:
+                //         // Headers
+                //         IWParagraph page3TableCol1_02 = page3Table[0, 2].AddParagraph();
+                //         page3TableCol1_02.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                //         page3TableCol1_02.AppendText($"{columnNamesPage3Text.Skip(2).ToList()[0]}\n$\u00A0\u00A0\u00A0\n");
+                //         // SubHeaders
+                //         IWParagraph page3TableCol1_10 = page3Table[1, 0].AddParagraph();
+                //         page3TableCol1_10.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                //         page3TableCol1_10.AppendText($"INCOME\n");
+                //         // Values
+                //         IWParagraph page3TableCol1_12 = page3Table[1, 2].AddParagraph();
+                //         page3TableCol1_12.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                //         page3TableCol1_12.AppendText($"$511,376.00\n");
+                //         break;
+                //     case 2:
+                //         // Headers
+                //         IWParagraph page3TableCol2_02 = page3Table[0, 2].AddParagraph();
+                //         page3TableCol2_02.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                //         page3TableCol2_02.AppendText($"{columnNamesPage3Text.Skip(2).ToList()[0]}\n$\u00A0\u00A0\u00A0");
+                //         IWParagraph page3TableCol2_03 = page3Table[0, 3].AddParagraph();
+                //         page3TableCol2_03.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                //         page3TableCol2_03.AppendText($"{columnNamesPage3Text.Skip(2).ToList()[1]}\n$\u00A0\u00A0\u00A0");
+                //         // SubHeaders
+                //         IWParagraph page3TableCol2_10 = page3Table[1, 0].AddParagraph();
+                //         page3TableCol2_10.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                //         page3TableCol2_10.AppendText("INCOME").CharacterFormat.Bold = true;
+                //         page3Table[1, 0].CellFormat.TextWrap = false;
                         
-                        page3TableCol2_50.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
-                        for (int row = 2; row <= page03ExpenditureWorksheet.Dimension.End.Row; row++)
-                        {
-                            page3TableCol2_50.AppendText($"\u00A0\u00A0{page03ExpenditureWorksheet.Cells[row, 1].Text}\n");
-                        }
-                        page3Table[5, 0].CellFormat.TextWrap = false;
+                //         // Values
+                //         IWParagraph page3TableCol2_20 = page3Table[2, 0].AddParagraph();
+                //         page3TableCol2_20.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                //         for (int row = 2; row <= page03Worksheet.Dimension.End.Row; row++)
+                //         {
+                //             page3TableCol2_20.AppendText($"\u00A0\u00A0{page03Worksheet.Cells[row, 1].Text}\n");
+                //         }
+                //         IWParagraph page3TableCol2_22 = page3Table[2, 2].AddParagraph();
+                //         page3TableCol2_22.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                //         for (int row = 2; row <= page03Worksheet.Dimension.End.Row; row++)
+                //         {
+                //             page3TableCol2_22.AppendText($"{page03Worksheet.Cells[row, 3].Text}\n");
+                //         }
+                //         IWParagraph page3TableCol2_23 = page3Table[2, 3].AddParagraph();
+                //         page3TableCol2_23.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                //         for (int row = 2; row <= page03Worksheet.Dimension.End.Row; row++)
+                //         {
+                //             page3TableCol2_23.AppendText($"{page03Worksheet.Cells[row, 4].Text}\n");
+                //         }
+
+                //         // HEADERS 2
+                //         IWParagraph page3TableCol2_40 = page3Table[4, 0].AddParagraph();
+                //         page3TableCol2_40.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                //         page3TableCol2_40.AppendText("EXPENDITURE").CharacterFormat.Bold = true;
+
+                //         // Values 2
+                //         IWParagraph page3TableCol2_50 = page3Table[5, 0].AddParagraph();
+                        
+                //         page3TableCol2_50.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                //         for (int row = 2; row <= page03ExpenditureWorksheet.Dimension.End.Row; row++)
+                //         {
+                //             page3TableCol2_50.AppendText($"\u00A0\u00A0{page03ExpenditureWorksheet.Cells[row, 1].Text}\n");
+                //         }
+                //         page3Table[5, 0].CellFormat.TextWrap = false;
                         
                         
-                        package.Dispose();
-                        break;
-                    case 3:
-                        IWParagraph page3TableCol3_02 = page3Table[0, 2].AddParagraph();
-                        page3TableCol3_02.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
-                        page3TableCol3_02.AppendText($"{columnNamesPage3Text.Skip(2).ToList()[0]}\n$\u00A0\u00A0\u00A0\n");
-                        IWParagraph page3TableCol3_03 = page3Table[0, 3].AddParagraph();
-                        page3TableCol3_03.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
-                        page3TableCol3_03.AppendText($"{columnNamesPage3Text.Skip(2).ToList()[1]}\n$\u00A0\u00A0\u00A0\n");
-                        IWParagraph page3TableCol3_04 = page3Table[0, 4].AddParagraph();
-                        page3TableCol3_04.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
-                        page3TableCol3_04.AppendText($"{columnNamesPage3Text.Skip(2).ToList()[2]}\n$\u00A0\u00A0\u00A0\n");
-                        break;
-                    default:
-                        Console.WriteLine("There is X");
-                        break;
-                }
+                //         package.Dispose();
+                //         break;
+                //     case 3:
+                //         IWParagraph page3TableCol3_02 = page3Table[0, 2].AddParagraph();
+                //         page3TableCol3_02.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
+                //         page3TableCol3_02.AppendText($"{columnNamesPage3Text.Skip(2).ToList()[0]}\n$\u00A0\u00A0\u00A0\n");
+                //         IWParagraph page3TableCol3_03 = page3Table[0, 3].AddParagraph();
+                //         page3TableCol3_03.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
+                //         page3TableCol3_03.AppendText($"{columnNamesPage3Text.Skip(2).ToList()[1]}\n$\u00A0\u00A0\u00A0\n");
+                //         IWParagraph page3TableCol3_04 = page3Table[0, 4].AddParagraph();
+                //         page3TableCol3_04.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
+                //         page3TableCol3_04.AppendText($"{columnNamesPage3Text.Skip(2).ToList()[2]}\n$\u00A0\u00A0\u00A0\n");
+                //         break;
+                //     default:
+                //         Console.WriteLine("There is X");
+                //         break;
+                // }
 
                 //page3Table[1, 0].AddParagraph().AppendText("Revenue\n");
                 //IWParagraph page03TableIncome = tocTable[0, 1].AddParagraph();
