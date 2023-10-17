@@ -330,47 +330,68 @@ namespace FinReportBuilderCLI.Services
                 cell.Width = page3TableCell3_4Width;
 
                 // add Expenditure data rows to table
-                page3TableTotalRowCount++;
-                int expenditureRowCount = 2;
-                for (int i = 1; i <= page03ExpenditureWorksheet.Dimension.End.Column; i++)
+                
+                for (int i = 1; i <= page03ExpenditureWorksheet.Dimension.End.Row; i++)
                 {
-                    
+                    row = page3Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                    page3TableTotalRowCount++;
 
+                    // cell 1
+                    cell = row.AddCell();
+                    cell.Width = page3TableCell1Width;
+                    cell.AddParagraph().AppendText($"{page03ExpenditureWorksheet.Cells[i, 1].Text}");
+                    page3Table.Rows[page3TableTotalRowCount - 1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
 
+                    // cell 2
+                    cell = row.AddCell();
+                    cell.Width = page3TableCell1Width;
+                    cell.AddParagraph().AppendText($"{page03ExpenditureWorksheet.Cells[i, 2].Text}");
+                    page3Table.Rows[page3TableTotalRowCount - 1].Cells[1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
 
+                    // cell 3
+                    cell = row.AddCell();
+                    cell.Width = page3TableCell1Width;
+                    cell.AddParagraph().AppendText($"{page03ExpenditureWorksheet.Cells[i, 3].Text}");
+                    page3Table.Rows[page3TableTotalRowCount - 1].Cells[2].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
 
-                    int modifiedI = (i - 1) % 4 + 1;
-                    switch(modifiedI)
-                    {
-                        case 1:
-                            row = page3Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
-                            cell = row.AddCell();
-                            cell.Width = page3TableCell1Width;
-                            cell.AddParagraph().AppendText($"{page03ExpenditureWorksheet.Cells[expenditureRowCount, 1].Text}");
-                            page3Table.Rows[2].Cells[i - 1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
-                            break;
-                        case 2:
-                            cell = row.AddCell();
-                            cell.Width = page3TableCell2Width;
-                            cell.AddParagraph().AppendText($"{page03ExpenditureWorksheet.Cells[expenditureRowCount, 2].Text}");
-                            page3Table.Rows[2].Cells[i - 1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
-                            break;
-                        case 3:
-                            cell = row.AddCell();
-                            cell.Width = page3TableCell3_4Width;
-                            cell.AddParagraph().AppendText($"{page03ExpenditureWorksheet.Cells[expenditureRowCount, 3].Text}");
-                            page3Table.Rows[2].Cells[i - 1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
-                            break;
-                        case 4:
-                            cell = row.AddCell();
-                            cell.Width = page3TableCell3_4Width;
-                            cell.AddParagraph().AppendText($"{page03ExpenditureWorksheet.Cells[expenditureRowCount, 4].Text}");
-                            page3Table.Rows[2].Cells[i - 1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
-                            break;
-                        default:
-                            break;
-                    }
-                    expenditureRowCount++;
+                    // cell 4
+                    cell = row.AddCell();
+                    cell.Width = page3TableCell1Width;
+                    cell.AddParagraph().AppendText($"{page03ExpenditureWorksheet.Cells[i, 4].Text}");
+                    page3Table.Rows[page3TableTotalRowCount - 1].Cells[3].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+
+                    // int modifiedI = (i - 1) % 4 + 1;
+                    // switch(modifiedI)
+                    // {
+                    //     case 1:
+                    //         row = page3Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                    //         cell = row.AddCell();
+                    //         cell.Width = page3TableCell1Width;
+                            
+                    //         page3Table.Rows[2].Cells[i - 1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                    //         break;
+                    //     case 2:
+                    //         cell = row.AddCell();
+                    //         cell.Width = page3TableCell2Width;
+                    //         cell.AddParagraph().AppendText($"{page03ExpenditureWorksheet.Cells[expenditureRowCount, 2].Text}");
+                    //         page3Table.Rows[2].Cells[i - 1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                    //         break;
+                    //     case 3:
+                    //         cell = row.AddCell();
+                    //         cell.Width = page3TableCell3_4Width;
+                    //         cell.AddParagraph().AppendText($"{page03ExpenditureWorksheet.Cells[expenditureRowCount, 3].Text}");
+                    //         page3Table.Rows[2].Cells[i - 1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                    //         break;
+                    //     case 4:
+                    //         cell = row.AddCell();
+                    //         cell.Width = page3TableCell3_4Width;
+                    //         cell.AddParagraph().AppendText($"{page03ExpenditureWorksheet.Cells[expenditureRowCount, 4].Text}");
+                    //         page3Table.Rows[2].Cells[i - 1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                    //         break;
+                    //     default:
+                    //         break;
+                    // }
+                    // expenditureRowCount++;
                 }
 
                 //page3Table.Rows[page3TableTotalRowCount-1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
