@@ -226,29 +226,154 @@ namespace FinReportBuilderCLI.Services
                 IWTable page3Table = section03.AddTable();
                 //page3Table.TableFormat.Borders.BorderType = BorderStyle.None;
                 page3Table.TableFormat.HorizontalAlignment = RowAlignment.Center;
-
+                int page3TableTotalRowCount = 0;
                 // add first row into table
                 WTableRow row = page3Table.AddRow();
-
+                page3TableTotalRowCount++;
+                int page3TableCell1Width = 210;
+                int page3TableCell2Width = 130;
+                int page3TableCell3_4Width = 90;
+                
                 // add cells to first row (heading row)
                 WTableCell cell = row.AddCell();
-                cell.Width = 200;
+                cell.Width = page3TableCell1Width;
 
                 cell = row.AddCell();
-                cell.AddParagraph().AppendText("NOTES\n");
-                cell.Width = 100;
+                cell.AddParagraph().AppendText("NOTE\n").CharacterFormat.Bold = true;
+                cell.Width = page3TableCell2Width;
 
-                int rowX = 2;
+                int startCell = 2;
                 for (int i = 3; i <= page03IncomeWorksheet.Dimension.End.Column; i++)
                 {
                     cell = row.AddCell();
-                    cell.Width = 100;
-                    cell.AddParagraph().AppendText($"{page03IncomeWorksheet.Cells[1, i].Text}\n$\u00A0\u00A0\u00A0");
-                    page3Table.Rows[0].Cells[rowX].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
-                    rowX++;
+                    cell.Width = page3TableCell3_4Width;
+                    cell.AddParagraph().AppendText($"{page03IncomeWorksheet.Cells[1, i].Text}\n$").CharacterFormat.Bold = true;
+                    page3Table.Rows[0].Cells[startCell].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
+                    startCell++;
                 }
 
-                
+                // add INCOME row to table
+                row = page3Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                page3TableTotalRowCount++;
+                cell = row.AddCell();
+                cell.AddParagraph().AppendText("INCOME\n").CharacterFormat.Bold = true;
+                cell.Width = page3TableCell1Width;
+                cell = row.AddCell();
+                cell.Width = page3TableCell2Width;
+                cell = row.AddCell();
+                cell.Width = page3TableCell3_4Width;
+                cell = row.AddCell();
+                cell.Width = page3TableCell3_4Width;
+
+                // add INCOME rows to table
+                row = page3Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                page3TableTotalRowCount++;
+                for (int i = 1; i <= page03ExpenditureWorksheet.Dimension.End.Row; i++)
+                {
+                    switch(i)
+                    {
+                        case 1:
+                            cell = row.AddCell();
+                            cell.Width = page3TableCell1Width;
+                            cell.AddParagraph().AppendText($"{page03IncomeWorksheet.Cells[2, i].Text}");
+                            page3Table.Rows[2].Cells[i - 1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                            break;
+                        case 2:
+                            cell = row.AddCell();
+                            cell.Width = page3TableCell2Width;
+                            cell.AddParagraph().AppendText($"{page03IncomeWorksheet.Cells[2, i].Text}");
+                            page3Table.Rows[2].Cells[i - 1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                            break;
+                        case 3:
+                            cell = row.AddCell();
+                            cell.Width = page3TableCell3_4Width;
+                            cell.AddParagraph().AppendText($"{page03IncomeWorksheet.Cells[2, i].Text}");
+                            page3Table.Rows[2].Cells[i - 1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                            break;
+                        case 4:
+                            cell = row.AddCell();
+                            cell.Width = page3TableCell3_4Width;
+                            cell.AddParagraph().AppendText($"{page03IncomeWorksheet.Cells[2, i].Text}");
+                            page3Table.Rows[2].Cells[i - 1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+                // add 3 blank rows
+                for (int i = 0; i <= 2; i++)
+                {
+                    row = page3Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                    page3TableTotalRowCount++;
+                    cell = row.AddCell();
+                    cell.Width = page3TableCell1Width;
+                    cell = row.AddCell();
+                    cell.Width = page3TableCell2Width;
+                    cell = row.AddCell();
+                    cell.Width = page3TableCell3_4Width;
+                    cell = row.AddCell();
+                    cell.Width = page3TableCell3_4Width;
+                }
+
+                // add EXPENDITURE row to table
+                row = page3Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                page3TableTotalRowCount++;
+                cell = row.AddCell();
+                cell.AddParagraph().AppendText("EXPENDITURE\n").CharacterFormat.Bold = true;
+                cell.Width = page3TableCell1Width;
+                cell = row.AddCell();
+                cell.Width = page3TableCell2Width;
+                cell = row.AddCell();
+                cell.Width = page3TableCell3_4Width;
+                cell = row.AddCell();
+                cell.Width = page3TableCell3_4Width;
+
+                // add Expenditure data rows to table
+                page3TableTotalRowCount++;
+                int expenditureRowCount = 2;
+                for (int i = 1; i <= page03ExpenditureWorksheet.Dimension.End.Column; i++)
+                {
+                    
+
+
+
+
+                    int modifiedI = (i - 1) % 4 + 1;
+                    switch(modifiedI)
+                    {
+                        case 1:
+                            row = page3Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                            cell = row.AddCell();
+                            cell.Width = page3TableCell1Width;
+                            cell.AddParagraph().AppendText($"{page03ExpenditureWorksheet.Cells[expenditureRowCount, 1].Text}");
+                            page3Table.Rows[2].Cells[i - 1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                            break;
+                        case 2:
+                            cell = row.AddCell();
+                            cell.Width = page3TableCell2Width;
+                            cell.AddParagraph().AppendText($"{page03ExpenditureWorksheet.Cells[expenditureRowCount, 2].Text}");
+                            page3Table.Rows[2].Cells[i - 1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                            break;
+                        case 3:
+                            cell = row.AddCell();
+                            cell.Width = page3TableCell3_4Width;
+                            cell.AddParagraph().AppendText($"{page03ExpenditureWorksheet.Cells[expenditureRowCount, 3].Text}");
+                            page3Table.Rows[2].Cells[i - 1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                            break;
+                        case 4:
+                            cell = row.AddCell();
+                            cell.Width = page3TableCell3_4Width;
+                            cell.AddParagraph().AppendText($"{page03ExpenditureWorksheet.Cells[expenditureRowCount, 4].Text}");
+                            page3Table.Rows[2].Cells[i - 1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                            break;
+                        default:
+                            break;
+                    }
+                    expenditureRowCount++;
+                }
+
+                //page3Table.Rows[page3TableTotalRowCount-1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
 
                 // List<string> columnNamesPage3Text = new();
                 // for (int i = 2; i <= page03IncomeWorksheet.Dimension.End.Column; i++)
