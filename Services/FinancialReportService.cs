@@ -679,41 +679,41 @@ namespace FinReportBuilderCLI.Services
                 //tocIncomeStatement.AppendText("3");
                 #endregion Section03
 
-                #region Section04
-                // Section04 - Title Paragraph
-                IWSection section04 = wordDocument.AddSection();
+                #region Page04
+                // Page04 - Title Paragraph
+                IWSection page04 = wordDocument.AddSection();
 
-                // Section04 - Page Setup
-                section04.PageSetup.Orientation = PageOrientation.Portrait;
-                section04.PageSetup.Margins.All = 36;
+                // Page04 - Page Setup
+                page04.PageSetup.Orientation = PageOrientation.Portrait;
+                page04.PageSetup.Margins.All = 36;
 
-                // Section04 - Paragraph Style 04 (Title)
-                IWParagraphStyle secn04Style01 = wordDocument.AddParagraphStyle("Section04Style01");
-                secn04Style01.ParagraphFormat.BackColor = Color.White;
-                secn04Style01.ParagraphFormat.AfterSpacing = 16f;
-                secn04Style01.ParagraphFormat.BeforeSpacing = 16f;
-                secn04Style01.ParagraphFormat.LineSpacing = 14f;
-                secn04Style01.CharacterFormat.FontName = "Times New Roman";
-                secn04Style01.CharacterFormat.FontSize = 14f;
-                secn04Style01.CharacterFormat.Bold = true;
+                // Page04 - Paragraph Style 04 (Title)
+                IWParagraphStyle page04Style01 = wordDocument.AddParagraphStyle("Page04Style01");
+                page04Style01.ParagraphFormat.BackColor = Color.White;
+                page04Style01.ParagraphFormat.AfterSpacing = 16f;
+                page04Style01.ParagraphFormat.BeforeSpacing = 16f;
+                page04Style01.ParagraphFormat.LineSpacing = 14f;
+                page04Style01.CharacterFormat.FontName = "Times New Roman";
+                page04Style01.CharacterFormat.FontSize = 14f;
+                page04Style01.CharacterFormat.Bold = true;
 
-                // Section04 - Title Paragraph
-                IWParagraph paragraph05 = section04.AddParagraph();
-                paragraph05.AppendText($"{clientName.ToUpperInvariant()}");
-                paragraph05.AppendBreak(BreakType.LineBreak);
-                paragraph05.AppendText(companyAbnAcn);
-                paragraph05.AppendBreak(BreakType.LineBreak);
-                paragraph05.AppendBreak(BreakType.LineBreak);
-                paragraph05.AppendText("NOTES TO THE FINANCIAL STATEMENTS");
-                paragraph05.AppendBreak(BreakType.LineBreak);
-                paragraph05.AppendText("FOR THE YEAR ENDED 30 JUNE 2020");
-                paragraph05.AppendBreak(BreakType.LineBreak);
+                // Page04 - Heading
+                IWParagraph page04PageHeading = page04.AddParagraph();
+                page04PageHeading.AppendText($"{clientName.ToUpperInvariant()}");
+                page04PageHeading.AppendBreak(BreakType.LineBreak);
+                page04PageHeading.AppendText(companyAbnAcn);
+                page04PageHeading.AppendBreak(BreakType.LineBreak);
+                page04PageHeading.AppendBreak(BreakType.LineBreak);
+                page04PageHeading.AppendText("NOTES TO THE FINANCIAL STATEMENTS");
+                page04PageHeading.AppendBreak(BreakType.LineBreak);
+                page04PageHeading.AppendText("FOR THE YEAR ENDED 30 JUNE 2020");
+                page04PageHeading.AppendBreak(BreakType.LineBreak);
 
-                // Section04 - HR
-                paragraph05.AppendText("_________________________________________________________________");
-                paragraph05.ApplyStyle("Section03Style01");
-                paragraph05.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
-                #endregion Section04
+                // Page04 - HR
+                page04PageHeading.AppendText("_________________________________________________________________");
+                page04PageHeading.ApplyStyle("Section03Style01");
+                page04PageHeading.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
+                #endregion Page04
 
                 #region Page05
                 // Page05 - Title Paragraph
