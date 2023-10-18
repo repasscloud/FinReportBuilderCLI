@@ -12,6 +12,9 @@ namespace FinReportBuilderCLI.Services
             string clientName,
             string? abn,
             string? acn,
+            double retainedEarningsLastFiscalYear,
+            double dividendPaidLastFiscalYear,
+            double dividendPaidThisFiscalYear,
             FileInfo fileInfo)
         {
             // Create new Word Document
@@ -202,6 +205,16 @@ namespace FinReportBuilderCLI.Services
                 secn03Style01.CharacterFormat.FontSize = 14f;
                 secn03Style01.CharacterFormat.Bold = true;
 
+                // Section03 - Used by the "footer" of the page
+                IWParagraphStyle page03Style02 = wordDocument.AddParagraphStyle("Page03Style02");
+                page03Style02.ParagraphFormat.BackColor = Color.White;
+                page03Style02.ParagraphFormat.AfterSpacing = 12f;
+                page03Style02.ParagraphFormat.BeforeSpacing = 12f;
+                page03Style02.ParagraphFormat.LineSpacing = 10f;
+                page03Style02.CharacterFormat.FontName = "Times New Roman";
+                page03Style02.CharacterFormat.FontSize = 10f;
+                page03Style02.CharacterFormat.Bold = false;
+
                 // Section03 - Title Paragraph
                 IWParagraph paragraph04 = section03.AddParagraph();
                 paragraph04.AppendText($"{clientName.ToUpperInvariant()}");
@@ -226,14 +239,14 @@ namespace FinReportBuilderCLI.Services
 
                 // Page03 - Table of Contents
                 IWTable page3Table = section03.AddTable();
-                //page3Table.TableFormat.Borders.BorderType = BorderStyle.None;
+                page3Table.TableFormat.Borders.BorderType = BorderStyle.None;
                 page3Table.TableFormat.HorizontalAlignment = RowAlignment.Center;
                 int page3TableTotalRowCount = 0;
                 // add first row into table
                 WTableRow row = page3Table.AddRow();
                 page3TableTotalRowCount++;
-                int page3TableCell1Width = 250;
-                int page3TableCell2Width = 90;
+                int page3TableCell1Width = 270;
+                int page3TableCell2Width = 70;
                 int page3TableCell3_4Width = 90;
                 
                 // add cells to first row (heading row)
@@ -364,19 +377,19 @@ namespace FinReportBuilderCLI.Services
                 }
 
                 // add 3 blank rows
-                for (int i = 0; i <= 2; i++)
-                {
-                    row = page3Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
-                    page3TableTotalRowCount++;
-                    cell = row.AddCell();
-                    cell.Width = page3TableCell1Width;
-                    cell = row.AddCell();
-                    cell.Width = page3TableCell2Width;
-                    cell = row.AddCell();
-                    cell.Width = page3TableCell3_4Width;
-                    cell = row.AddCell();
-                    cell.Width = page3TableCell3_4Width;
-                }
+                // for (int i = 0; i <= 2; i++)
+                // {
+                //     row = page3Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                //     page3TableTotalRowCount++;
+                //     cell = row.AddCell();
+                //     cell.Width = page3TableCell1Width;
+                //     cell = row.AddCell();
+                //     cell.Width = page3TableCell2Width;
+                //     cell = row.AddCell();
+                //     cell.Width = page3TableCell3_4Width;
+                //     cell = row.AddCell();
+                //     cell.Width = page3TableCell3_4Width;
+                // }
 
                 // calculate the income, minus costs:
                 int revenueTotalColumnC = 0;
@@ -427,10 +440,127 @@ namespace FinReportBuilderCLI.Services
                 double columnCTaxRate = CalculatorTool.CalculateTaxRate(thisFiscalYear: currentFiscalYear, thisFiscalYearPBTI: revenueTotalColumnC + expenseTotalColumnC);
                 double columnDTaxRate = CalculatorTool.CalculateTaxRate(thisFiscalYear: lastFiscalYear, thisFiscalYearPBTI: revenueTotalColumnD + expenseTotalColumnD);
                 
-                Console.WriteLine($"{currentFiscalYear} : {columnCTaxRate}");
-                Console.WriteLine($"{lastFiscalYear} : {columnDTaxRate}");
+                // Console.WriteLine($"{currentFiscalYear} : {columnCTaxRate}");
+                // Console.WriteLine($"{lastFiscalYear} : {columnDTaxRate}");
 
+                // write Income Tax Expense
+                row = page3Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                page3TableTotalRowCount++;
+                cell = row.AddCell();
+                cell.Width = page3TableCell1Width;
+                cell.AddParagraph().AppendText("Income Tax Expense");
+                page3Table.Rows[page3TableTotalRowCount - 1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                cell = row.AddCell();
+                cell.Width = page3TableCell2Width;
+                cell = row.AddCell();
+                cell.Width = page3TableCell3_4Width;
+                cell.AddParagraph().AppendText($"{((double)Math.Truncate((revenueTotalColumnC + expenseTotalColumnC) * columnCTaxRate)).ToString("C", CultureInfo.CurrentCulture)}");
+                page3Table.Rows[page3TableTotalRowCount - 1].Cells[2].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                cell = row.AddCell();
+                cell.Width = page3TableCell3_4Width;
+                cell.AddParagraph().AppendText($"{((double)Math.Truncate((revenueTotalColumnD + expenseTotalColumnD) * columnDTaxRate)).ToString("C", CultureInfo.CurrentCulture)}");
+                page3Table.Rows[page3TableTotalRowCount - 1].Cells[3].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
 
+                // write Profit for the Year
+                row = page3Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                page3TableTotalRowCount++;
+                cell = row.AddCell();
+                cell.Width = page3TableCell1Width;
+                cell.AddParagraph().AppendText("Profit for the financial year");
+                page3Table.Rows[page3TableTotalRowCount - 1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                cell = row.AddCell();
+                cell.Width = page3TableCell2Width;
+                cell = row.AddCell();
+                cell.Width = page3TableCell3_4Width;
+                cell.AddParagraph().AppendText($"{((double)Math.Truncate(revenueTotalColumnC + expenseTotalColumnC - ((revenueTotalColumnC + expenseTotalColumnC) * columnCTaxRate))).ToString("C", CultureInfo.CurrentCulture)}");
+                page3Table.Rows[page3TableTotalRowCount - 1].Cells[2].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                cell = row.AddCell();
+                cell.Width = page3TableCell3_4Width;
+                cell.AddParagraph().AppendText($"{((double)Math.Truncate(revenueTotalColumnD + expenseTotalColumnD - ((revenueTotalColumnD + expenseTotalColumnD) * columnDTaxRate))).ToString("C", CultureInfo.CurrentCulture)}");
+                page3Table.Rows[page3TableTotalRowCount - 1].Cells[3].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+
+                /*
+                 * here we need to calculate the remaining fields for the rest of the form
+                 * some of these calculations will follow through to the lower sections, as
+                 * they will carry from ColumnD into ColumnC further down
+                 */
+            // int retainedEarningsLastFiscalYear,
+            // int dividendPaidLastFiscalYear,
+            // int dividendPaidThisFiscalYear,
+                
+                double profitFromColumnD = revenueTotalColumnD + expenseTotalColumnD - ((revenueTotalColumnD + expenseTotalColumnD) * columnDTaxRate);
+                profitFromColumnD = profitFromColumnD + retainedEarningsLastFiscalYear;
+                profitFromColumnD = profitFromColumnD - dividendPaidLastFiscalYear;
+                
+
+                // write retained earnings
+                row = page3Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                page3TableTotalRowCount++;
+                cell = row.AddCell();
+                cell.Width = page3TableCell1Width;
+                cell.AddParagraph().AppendText("Initial retained earnings for the financial year");
+                page3Table.Rows[page3TableTotalRowCount - 1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                cell = row.AddCell();
+                cell.Width = page3TableCell2Width;
+                cell = row.AddCell();
+                cell.Width = page3TableCell3_4Width;
+                cell.AddParagraph().AppendText($"{((double)Math.Truncate(profitFromColumnD)).ToString("C", CultureInfo.CurrentCulture)}");
+                page3Table.Rows[page3TableTotalRowCount - 1].Cells[2].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                cell = row.AddCell();
+                cell.Width = page3TableCell3_4Width;
+                cell.AddParagraph().AppendText($"{retainedEarningsLastFiscalYear.ToString("C", CultureInfo.CurrentCulture)}");
+                page3Table.Rows[page3TableTotalRowCount - 1].Cells[3].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+
+                // write dividend paid
+                // int dividendPaidLastFiscalYear,
+                // int dividendPaidThisFiscalYear,
+                row = page3Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                page3TableTotalRowCount++;
+                cell = row.AddCell();
+                cell.Width = page3TableCell1Width;
+                cell.AddParagraph().AppendText("Dividend Paid");
+                page3Table.Rows[page3TableTotalRowCount - 1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                cell = row.AddCell();
+                cell.Width = page3TableCell2Width;
+                cell = row.AddCell();
+                cell.Width = page3TableCell3_4Width;
+                cell.AddParagraph().AppendText($"{dividendPaidThisFiscalYear.ToString("C", CultureInfo.CurrentCulture)}");
+                page3Table.Rows[page3TableTotalRowCount - 1].Cells[2].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                cell = row.AddCell();
+                cell.Width = page3TableCell3_4Width;
+                cell.AddParagraph().AppendText($"{dividendPaidLastFiscalYear.ToString("C", CultureInfo.CurrentCulture)}");
+                page3Table.Rows[page3TableTotalRowCount - 1].Cells[3].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+
+                // write retained earnings
+                // int dividendPaidLastFiscalYear,
+                // int dividendPaidThisFiscalYear,
+                row = page3Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                page3TableTotalRowCount++;
+                cell = row.AddCell();
+                cell.Width = page3TableCell1Width;
+                cell.AddParagraph().AppendText("Final retained earnings for the financial year");
+                page3Table.Rows[page3TableTotalRowCount - 1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                cell = row.AddCell();
+                cell.Width = page3TableCell2Width;
+                cell = row.AddCell();
+                cell.Width = page3TableCell3_4Width;
+                double thisFiscalYearFinalRetainedEarnings = (double)Math.Truncate(revenueTotalColumnC + expenseTotalColumnC - ((revenueTotalColumnC + expenseTotalColumnC) * columnCTaxRate)) + (double)Math.Truncate(profitFromColumnD);
+                cell.AddParagraph().AppendText($"{thisFiscalYearFinalRetainedEarnings.ToString("C", CultureInfo.CurrentCulture)}");
+                page3Table.Rows[page3TableTotalRowCount - 1].Cells[2].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                cell = row.AddCell();
+                cell.Width = page3TableCell3_4Width;
+                cell.AddParagraph().AppendText($"{((double)Math.Truncate(profitFromColumnD)).ToString("C", CultureInfo.CurrentCulture)}");
+                page3Table.Rows[page3TableTotalRowCount - 1].Cells[3].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+
+                IWParagraph page03EndParagraph = section03.AddParagraph();
+                page03EndParagraph.AppendText($"\n\nThese notes should be read in conjunction with the attached compilation report.");
+                page03EndParagraph.ApplyStyle("Page03Style02");
+                page03EndParagraph.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
+
+                IWParagraph page03Footer = section03.HeadersFooters.Footer.AddParagraph();
+                page03Footer.AppendText($"Page ");
+                page03Footer.AppendField("Page", Syncfusion.DocIO.FieldType.FieldPage);
+                page03Footer.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
 
 
                 //page3Table.Rows[page3TableTotalRowCount-1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;

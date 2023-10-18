@@ -8,7 +8,7 @@ namespace FinReportBuilderCLI
         static void Main(string[] args)
         {
             // Syncfusion License
-            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Mjc2MDIzMUAzMjMzMmUzMDJlMzBFdGdaRVVWL1duUyt1TERYK3kydjhNOXl3ck42Q3Y1eWRMMjR3UlJJbnRFPQ==");
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("");
 
             // EPP License
             ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
@@ -16,6 +16,9 @@ namespace FinReportBuilderCLI
             string clientName = "zaimay pty ltd";
             string abn = "82144820897";
             string acn = "144820897";
+            double retainedEarningsLastFiscalYear = 6147.00;
+            double dividendPaidLastFiscalYear = 0.00;
+            double dividendPaidThisFiscalYear = 0.00;
 
             // Get the current directory where the executable is located
             string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
@@ -65,7 +68,8 @@ namespace FinReportBuilderCLI
             FinancialReportService reportService = new FinancialReportService();
 
             // Create the financial report
-            var documentStream = reportService.CreateFinancialReportForYearEnded(clientName, abn, acn, fileInfo);
+            var documentStream = reportService.CreateFinancialReportForYearEnded(clientName, abn, acn, 
+                retainedEarningsLastFiscalYear, dividendPaidLastFiscalYear, dividendPaidThisFiscalYear, fileInfo);
 
             // Specify the path where you want to save the document
             string filePath = Path.Combine(currentDirectory, "FinancialReport.docx"); // Replace with your desired file path
