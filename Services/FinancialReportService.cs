@@ -187,16 +187,16 @@ namespace FinReportBuilderCLI.Services
                 tocDetailedProfitAndLossStatement.AppendText("11");
                 #endregion Section02
 
-                #region Section03
-                // Section03 - Title Paragraph
-                IWSection section03 = wordDocument.AddSection();
+                #region Page03
+                // Page03 - Title Paragraph
+                IWSection page03 = wordDocument.AddSection();
 
-                // Section03 - Page Setup
-                section03.PageSetup.Orientation = PageOrientation.Portrait;
-                section03.PageSetup.Margins.All = 36;
+                // Page03 - Page Setup
+                page03.PageSetup.Orientation = PageOrientation.Portrait;
+                page03.PageSetup.Margins.All = 36;
 
-                // Section03 - Paragraph Style 03 (Title)
-                IWParagraphStyle secn03Style01 = wordDocument.AddParagraphStyle("Section03Style01");
+                // Page03 - Paragraph Style 03 (Title)
+                IWParagraphStyle secn03Style01 = wordDocument.AddParagraphStyle("Page03Style01");
                 secn03Style01.ParagraphFormat.BackColor = Color.White;
                 secn03Style01.ParagraphFormat.AfterSpacing = 16f;
                 secn03Style01.ParagraphFormat.BeforeSpacing = 16f;
@@ -205,7 +205,7 @@ namespace FinReportBuilderCLI.Services
                 secn03Style01.CharacterFormat.FontSize = 14f;
                 secn03Style01.CharacterFormat.Bold = true;
 
-                // Section03 - Used by the "footer" of the page
+                // Page03 - Used by the "footer" of the page
                 IWParagraphStyle page03Style02 = wordDocument.AddParagraphStyle("Page03Style02");
                 page03Style02.ParagraphFormat.BackColor = Color.White;
                 page03Style02.ParagraphFormat.AfterSpacing = 12f;
@@ -215,8 +215,8 @@ namespace FinReportBuilderCLI.Services
                 page03Style02.CharacterFormat.FontSize = 10f;
                 page03Style02.CharacterFormat.Bold = false;
 
-                // Section03 - Title Paragraph
-                IWParagraph paragraph04 = section03.AddParagraph();
+                // Page03 - Title Paragraph
+                IWParagraph paragraph04 = page03.AddParagraph();
                 paragraph04.AppendText($"{clientName.ToUpperInvariant()}");
                 paragraph04.AppendBreak(BreakType.LineBreak);
                 paragraph04.AppendText(companyAbnAcn);
@@ -227,9 +227,9 @@ namespace FinReportBuilderCLI.Services
                 paragraph04.AppendText("FOR THE YEAR ENDED 30 JUNE 2020");
                 paragraph04.AppendBreak(BreakType.LineBreak);
 
-                // Section03 - HR
+                // Page03 - HR
                 paragraph04.AppendText("__________________________________________________________________________");
-                paragraph04.ApplyStyle("Section03Style01");
+                paragraph04.ApplyStyle("Page03Style01");
                 paragraph04.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
 
                 // Page03 - Read Excel File
@@ -238,7 +238,7 @@ namespace FinReportBuilderCLI.Services
                 ExcelWorksheet page03ExpenditureWorksheet = package.Workbook.Worksheets[1];
 
                 // Page03 - Table of Contents
-                IWTable page3Table = section03.AddTable();
+                IWTable page3Table = page03.AddTable();
                 page3Table.TableFormat.Borders.BorderType = BorderStyle.None;
                 page3Table.TableFormat.HorizontalAlignment = RowAlignment.Center;
                 int page3TableTotalRowCount = 0;
@@ -263,7 +263,7 @@ namespace FinReportBuilderCLI.Services
                 {
                     cell = row.AddCell();
                     cell.Width = page3TableCell3_4Width;
-                    cell.AddParagraph().AppendText($"{page03IncomeWorksheet.Cells[1, i].Text}\n$").CharacterFormat.Bold = true;
+                    cell.AddParagraph().AppendText($"{(double)Math.Truncate(double.Parse(page03IncomeWorksheet.Cells[1, i].Text))}\n$").CharacterFormat.Bold = true;
                     page3Table.Rows[0].Cells[startCell].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
                     startCell++;
                 }
@@ -552,12 +552,12 @@ namespace FinReportBuilderCLI.Services
                 cell.AddParagraph().AppendText($"{((double)Math.Truncate(profitFromColumnD)).ToString("C", CultureInfo.CurrentCulture)}");
                 page3Table.Rows[page3TableTotalRowCount - 1].Cells[3].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
 
-                IWParagraph page03EndParagraph = section03.AddParagraph();
+                IWParagraph page03EndParagraph = page03.AddParagraph();
                 page03EndParagraph.AppendText($"\n\nThese notes should be read in conjunction with the attached compilation report.");
                 page03EndParagraph.ApplyStyle("Page03Style02");
                 page03EndParagraph.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
 
-                IWParagraph page03Footer = section03.HeadersFooters.Footer.AddParagraph();
+                IWParagraph page03Footer = page03.HeadersFooters.Footer.AddParagraph();
                 page03Footer.AppendText($"Page ");
                 page03Footer.AppendField("Page", Syncfusion.DocIO.FieldType.FieldPage);
                 page03Footer.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
@@ -677,7 +677,7 @@ namespace FinReportBuilderCLI.Services
                 //IWParagraph page03TableIncome = tocTable[0, 1].AddParagraph();
                 //tocIncomeStatement.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
                 //tocIncomeStatement.AppendText("3");
-                #endregion Section03
+                #endregion Page03
 
                 #region Page04
                 // Page04 - Title Paragraph
@@ -711,8 +711,137 @@ namespace FinReportBuilderCLI.Services
 
                 // Page04 - HR
                 page04PageHeading.AppendText("_________________________________________________________________");
-                page04PageHeading.ApplyStyle("Section03Style01");
+                page04PageHeading.ApplyStyle("Page03Style01");
                 page04PageHeading.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
+
+                // Page04 - Get the worksheets
+                ExcelWorksheet page04CurrentAssetsWorksheet = package.Workbook.Worksheets[2];
+                ExcelWorksheet page04NonCurrentAssetsWorksheet = package.Workbook.Worksheets[3];
+                ExcelWorksheet page04CurrentLiabilitiesWorksheet = package.Workbook.Worksheets[4];
+                ExcelWorksheet page04NonCurrentLiabilitiesWorksheet = package.Workbook.Worksheets[5];
+                ExcelWorksheet page04EquityWorksheet = package.Workbook.Worksheets[6];
+
+                // Page04 - Initialise table
+                IWTable page4Table = page04.AddTable();
+                //page4Table.TableFormat.Borders.BorderType = BorderStyle.None;
+                page4Table.TableFormat.HorizontalAlignment = RowAlignment.Center;
+                int page4TableRowCount = 0;
+                
+                // Page04 - add first row into table
+                WTableRow page4TableRow = page4Table.AddRow();
+                page4TableRowCount++;
+                int page4TableCell1Width = 270;
+                int page4TableCell2Width = 70;
+                int page4TableCell3_4Width = 90;
+                
+                // add cells to first row (heading row)
+                WTableCell page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell1Width;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.AddParagraph().AppendText("NOTE\n").CharacterFormat.Bold = true;
+                page4TableCell.Width = page4TableCell2Width;
+                page4Table.Rows[0].Cells[1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
+                int page4StartCell = 2;
+                for (int i = 3; i <= page04CurrentAssetsWorksheet.Dimension.End.Column; i++)
+                {
+                    page4TableCell = page4TableRow.AddCell();
+                    page4TableCell.Width = page4TableCell3_4Width;
+                    page4TableCell.AddParagraph().AppendText($"{(double)Math.Truncate(double.Parse(page04CurrentAssetsWorksheet.Cells[1, i].Text))}\n$").CharacterFormat.Bold = true;
+                    page4Table.Rows[0].Cells[page4StartCell].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
+                    page4StartCell++;
+                }
+
+                
+
+                // add ASSETS row to table
+                page4TableRow = page4Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                page4TableRowCount++;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.AddParagraph().AppendText("ASSETS").CharacterFormat.Bold = true;
+                page4TableCell.Width = page4TableCell1Width;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell2Width;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell3_4Width;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell3_4Width;
+
+                // add CURRENT ASSETS row to table
+                page4TableRow = page4Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                page4TableRowCount++;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.AddParagraph().AppendText("\u00A0CURRENT ASSETS").CharacterFormat.Bold = true;
+                page4TableCell.Width = page4TableCell1Width;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell2Width;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell3_4Width;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell3_4Width;
+
+                // add CURRENT ASSETS rows to table
+                
+                // this code counts the rows, and for each row, it inputs it into the table, cell by cell across, assuming 4 columns, always
+                // Console.WriteLine($"Row Count: {page04CurrentAssetsWorksheet.Dimension.End.Row}");
+                // Console.WriteLine($"Column Count: {page04CurrentAssetsWorksheet.Dimension.End.Column}");
+                // Console.WriteLine($"Total Row Count: {page4TableRowCount}");
+
+                for (int i = 2; i <= page04CurrentAssetsWorksheet.Dimension.End.Row; i++)
+                {
+                    // Console.WriteLine($"Cell 1: {page04CurrentAssetsWorksheet.Cells[i, 1].Text}");
+                    // Console.WriteLine($"Cell 2: {page04CurrentAssetsWorksheet.Cells[i, 2].Text}");
+                    // Console.WriteLine($"Cell 3: {page04CurrentAssetsWorksheet.Cells[i, 3].Text}");
+                    // Console.WriteLine($"Cell 4: {page04CurrentAssetsWorksheet.Cells[i, 4].Text}");
+                    page4TableRow = page4Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                    page4TableRowCount++;
+
+                    page4TableCell = page4TableRow.AddCell();
+                    page4TableCell.Width = page4TableCell1Width;
+                    page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{page04CurrentAssetsWorksheet.Cells[i, 1].Text}");
+                    
+                    page4TableCell = page4TableRow.AddCell();
+                    page4TableCell.Width = page4TableCell2Width;
+                    page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{page04CurrentAssetsWorksheet.Cells[i, 2].Text}");
+
+                    page4TableCell = page4TableRow.AddCell();
+                    page4TableCell.Width = page4TableCell3_4Width;
+                    page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{page04CurrentAssetsWorksheet.Cells[i, 3].Text}");
+
+                    page4TableCell = page4TableRow.AddCell();
+                    page4TableCell.Width = page4TableCell3_4Width;
+                    page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{page04CurrentAssetsWorksheet.Cells[i, 4].Text}");
+                    
+                    page4Table.Rows[page4TableRowCount-1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                    page4Table.Rows[page4TableRowCount-1].Cells[1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                    page4Table.Rows[page4TableRowCount-1].Cells[2].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                    page4Table.Rows[page4TableRowCount-1].Cells[3].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                }
+                // for (int i = 2; i <= page04CurrentAssetsWorksheet.Dimension.End.Row; i++)
+                // {
+                //     page4TableRow = page4Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                //     page4TableRowCount++;
+
+                //     page4TableCell = page4TableRow .AddCell();
+                //     page4TableCell.Width = page3TableCell1Width;
+                //     page4TableCell.AddParagraph().AppendText($"{page04CurrentAssetsWorksheet.Cells[i, 1].Text}");
+                //     page3Table.Rows[page4TableRowCount].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+
+                //     page4TableCell = page4TableRow .AddCell();
+                //     page4TableCell.Width = page3TableCell1Width;
+                //     page4TableCell.AddParagraph().AppendText($"{page04CurrentAssetsWorksheet.Cells[i, 2].Text}");
+                //     page3Table.Rows[page4TableRowCount].Cells[1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+
+                //     page4TableCell = page4TableRow .AddCell();
+                //     page4TableCell.Width = page3TableCell1Width;
+                //     page4TableCell.AddParagraph().AppendText($"{page04CurrentAssetsWorksheet.Cells[i, 3].Text}");
+                //     page3Table.Rows[page4TableRowCount].Cells[2].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+
+                //     page4TableCell = page4TableRow .AddCell();
+                //     page4TableCell.Width = page3TableCell1Width;
+                //     page4TableCell.AddParagraph().AppendText($"{page04CurrentAssetsWorksheet.Cells[i, 4].Text}");
+                //     page3Table.Rows[page4TableRowCount].Cells[3].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                // }
+
                 #endregion Page04
 
                 #region Page05
