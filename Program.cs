@@ -8,7 +8,7 @@ namespace FinReportBuilderCLI
         static void Main(string[] args)
         {
             // Syncfusion License
-            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("");
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Mjc2MDIzMUAzMjMzMmUzMDJlMzBFdGdaRVVWL1duUyt1TERYK3kydjhNOXl3ck42Q3Y1eWRMMjR3UlJJbnRFPQ==");
 
             // EPP License
             ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
