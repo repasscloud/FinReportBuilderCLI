@@ -723,7 +723,7 @@ namespace FinReportBuilderCLI.Services
 
                 // Page04 - Initialise table
                 IWTable page4Table = page04.AddTable();
-                //page4Table.TableFormat.Borders.BorderType = BorderStyle.None;
+                page4Table.TableFormat.Borders.BorderType = BorderStyle.None;
                 page4Table.TableFormat.HorizontalAlignment = RowAlignment.Center;
                 int page4TableRowCount = 0;
                 
@@ -785,6 +785,8 @@ namespace FinReportBuilderCLI.Services
                 // Console.WriteLine($"Row Count: {page04CurrentAssetsWorksheet.Dimension.End.Row}");
                 // Console.WriteLine($"Column Count: {page04CurrentAssetsWorksheet.Dimension.End.Column}");
                 // Console.WriteLine($"Total Row Count: {page4TableRowCount}");
+                double totalCurrentAssetsThisFiscalYear = 0;
+                double totalCurrentAssetsLastFiscalYear = 0;
 
                 for (int i = 2; i <= page04CurrentAssetsWorksheet.Dimension.End.Row; i++)
                 {
@@ -797,6 +799,7 @@ namespace FinReportBuilderCLI.Services
 
                     page4TableCell = page4TableRow.AddCell();
                     page4TableCell.Width = page4TableCell1Width;
+                    //$"\u00A0\u00A0{((double)Math.Truncate(page04CurrentAssetsWorksheet.Cells[i, 1].Text)).ToString("C", CultureInfo.CurrentCulture)}
                     page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{page04CurrentAssetsWorksheet.Cells[i, 1].Text}");
                     
                     page4TableCell = page4TableRow.AddCell();
@@ -805,42 +808,608 @@ namespace FinReportBuilderCLI.Services
 
                     page4TableCell = page4TableRow.AddCell();
                     page4TableCell.Width = page4TableCell3_4Width;
-                    page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{page04CurrentAssetsWorksheet.Cells[i, 3].Text}");
+                    page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{((double)Math.Truncate(double.Parse(page04CurrentAssetsWorksheet.Cells[i, 3].Text))).ToString("C", CultureInfo.CurrentCulture)}");
+                    totalCurrentAssetsThisFiscalYear = totalCurrentAssetsThisFiscalYear + double.Parse(page04CurrentAssetsWorksheet.Cells[i, 3].Text);
 
                     page4TableCell = page4TableRow.AddCell();
                     page4TableCell.Width = page4TableCell3_4Width;
-                    page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{page04CurrentAssetsWorksheet.Cells[i, 4].Text}");
-                    
+                    page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{((double)Math.Truncate(double.Parse(page04CurrentAssetsWorksheet.Cells[i, 4].Text))).ToString("C", CultureInfo.CurrentCulture)}");
+                    totalCurrentAssetsLastFiscalYear = totalCurrentAssetsLastFiscalYear + double.Parse(page04CurrentAssetsWorksheet.Cells[i, 4].Text);
+
                     page4Table.Rows[page4TableRowCount-1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
                     page4Table.Rows[page4TableRowCount-1].Cells[1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
                     page4Table.Rows[page4TableRowCount-1].Cells[2].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
                     page4Table.Rows[page4TableRowCount-1].Cells[3].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
                 }
-                // for (int i = 2; i <= page04CurrentAssetsWorksheet.Dimension.End.Row; i++)
-                // {
-                //     page4TableRow = page4Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
-                //     page4TableRowCount++;
+                
+                // total current assets
+                page4TableRow = page4Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                page4TableRowCount++;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell1Width;
+                page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0TOTAL CURRENT ASSETS").CharacterFormat.Bold = true;;
+                    
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell2Width;
+                page4TableCell.AddParagraph().AppendText($"");
 
-                //     page4TableCell = page4TableRow .AddCell();
-                //     page4TableCell.Width = page3TableCell1Width;
-                //     page4TableCell.AddParagraph().AppendText($"{page04CurrentAssetsWorksheet.Cells[i, 1].Text}");
-                //     page3Table.Rows[page4TableRowCount].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell3_4Width;
+                page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{((double)Math.Truncate(totalCurrentAssetsThisFiscalYear)).ToString("C", CultureInfo.CurrentCulture)}");
 
-                //     page4TableCell = page4TableRow .AddCell();
-                //     page4TableCell.Width = page3TableCell1Width;
-                //     page4TableCell.AddParagraph().AppendText($"{page04CurrentAssetsWorksheet.Cells[i, 2].Text}");
-                //     page3Table.Rows[page4TableRowCount].Cells[1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell3_4Width;
+                page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{((double)Math.Truncate(totalCurrentAssetsLastFiscalYear)).ToString("C", CultureInfo.CurrentCulture)}");
+                
+                page4Table.Rows[page4TableRowCount-1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                page4Table.Rows[page4TableRowCount-1].Cells[1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                page4Table.Rows[page4TableRowCount-1].Cells[2].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                page4Table.Rows[page4TableRowCount-1].Cells[3].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
 
-                //     page4TableCell = page4TableRow .AddCell();
-                //     page4TableCell.Width = page3TableCell1Width;
-                //     page4TableCell.AddParagraph().AppendText($"{page04CurrentAssetsWorksheet.Cells[i, 3].Text}");
-                //     page3Table.Rows[page4TableRowCount].Cells[2].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                // blank line
+                page4TableRow = page4Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                page4TableRowCount++;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell1Width;
+                page4TableCell.AddParagraph().AppendText(string.Empty);
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell2Width;
+                page4TableCell.AddParagraph().AppendText(string.Empty);
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell3_4Width;
+                page4TableCell.AddParagraph().AppendText(string.Empty);
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell3_4Width;
+                page4TableCell.AddParagraph().AppendText(string.Empty);
+                page4Table.Rows[page4TableRowCount-1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                page4Table.Rows[page4TableRowCount-1].Cells[1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                page4Table.Rows[page4TableRowCount-1].Cells[2].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                page4Table.Rows[page4TableRowCount-1].Cells[3].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
 
-                //     page4TableCell = page4TableRow .AddCell();
-                //     page4TableCell.Width = page3TableCell1Width;
-                //     page4TableCell.AddParagraph().AppendText($"{page04CurrentAssetsWorksheet.Cells[i, 4].Text}");
-                //     page3Table.Rows[page4TableRowCount].Cells[3].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
-                // }
+                // add NON CURRENT ASSETS row to table
+                page4TableRow = page4Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                page4TableRowCount++;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.AddParagraph().AppendText("\u00A0NON-CURRENT ASSETS").CharacterFormat.Bold = true;
+                page4TableCell.Width = page4TableCell1Width;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell2Width;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell3_4Width;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell3_4Width;
+
+                double totalNonCurrentAssetsThisFiscalYear = 0;
+                double totalNonCurrentAssetsLastFiscalYear = 0;
+
+                for (int i = 2; i <= page04NonCurrentAssetsWorksheet.Dimension.End.Row; i++)
+                {
+                    page4TableRow = page4Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                    page4TableRowCount++;
+
+                    page4TableCell = page4TableRow.AddCell();
+                    page4TableCell.Width = page4TableCell1Width;
+                    page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{page04NonCurrentAssetsWorksheet.Cells[i, 1].Text}");
+                    
+                    page4TableCell = page4TableRow.AddCell();
+                    page4TableCell.Width = page4TableCell2Width;
+                    page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{page04NonCurrentAssetsWorksheet.Cells[i, 2].Text}");
+
+                    page4TableCell = page4TableRow.AddCell();
+                    page4TableCell.Width = page4TableCell3_4Width;
+                    page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{((double)Math.Truncate(double.Parse(page04NonCurrentAssetsWorksheet.Cells[i, 3].Text))).ToString("C", CultureInfo.CurrentCulture)}");
+                    totalNonCurrentAssetsThisFiscalYear = totalNonCurrentAssetsThisFiscalYear + double.Parse(page04NonCurrentAssetsWorksheet.Cells[i, 3].Text);
+
+                    page4TableCell = page4TableRow.AddCell();
+                    page4TableCell.Width = page4TableCell3_4Width;
+                    page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{((double)Math.Truncate(double.Parse(page04NonCurrentAssetsWorksheet.Cells[i, 4].Text))).ToString("C", CultureInfo.CurrentCulture)}");
+                    totalNonCurrentAssetsLastFiscalYear = totalNonCurrentAssetsLastFiscalYear + double.Parse(page04NonCurrentAssetsWorksheet.Cells[i, 4].Text);
+
+                    page4Table.Rows[page4TableRowCount-1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                    page4Table.Rows[page4TableRowCount-1].Cells[1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
+                    page4Table.Rows[page4TableRowCount-1].Cells[2].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                    page4Table.Rows[page4TableRowCount-1].Cells[3].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                }
+
+                // total non-current assets
+                page4TableRow = page4Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                page4TableRowCount++;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell1Width;
+                page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0TOTAL NON-CURRENT ASSETS").CharacterFormat.Bold = true;;
+                    
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell2Width;
+                page4TableCell.AddParagraph().AppendText($"");
+
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell3_4Width;
+                page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{((double)Math.Truncate(totalNonCurrentAssetsThisFiscalYear)).ToString("C", CultureInfo.CurrentCulture)}");
+
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell3_4Width;
+                page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{((double)Math.Truncate(totalNonCurrentAssetsLastFiscalYear)).ToString("C", CultureInfo.CurrentCulture)}");
+                
+                page4Table.Rows[page4TableRowCount-1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                page4Table.Rows[page4TableRowCount-1].Cells[1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
+                page4Table.Rows[page4TableRowCount-1].Cells[2].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                page4Table.Rows[page4TableRowCount-1].Cells[3].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+
+                // NET TOTAL ASSETS
+                page4TableRow = page4Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                page4TableRowCount++;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell1Width;
+                page4TableCell.AddParagraph().AppendText($"TOTAL ASSETS").CharacterFormat.Bold = true;;
+                    
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell2Width;
+                page4TableCell.AddParagraph().AppendText($"");
+
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell3_4Width;
+                page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{((double)Math.Truncate(totalCurrentAssetsThisFiscalYear + totalNonCurrentAssetsThisFiscalYear)).ToString("C", CultureInfo.CurrentCulture)}").CharacterFormat.Bold = true;
+
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell3_4Width;
+                page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{((double)Math.Truncate(totalCurrentAssetsLastFiscalYear + totalNonCurrentAssetsLastFiscalYear)).ToString("C", CultureInfo.CurrentCulture)}").CharacterFormat.Bold = true;
+                
+                page4Table.Rows[page4TableRowCount-1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                page4Table.Rows[page4TableRowCount-1].Cells[1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
+                page4Table.Rows[page4TableRowCount-1].Cells[2].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                page4Table.Rows[page4TableRowCount-1].Cells[3].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+
+
+                // blank line
+                page4TableRow = page4Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                page4TableRowCount++;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell1Width;
+                page4TableCell.AddParagraph().AppendText(string.Empty);
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell2Width;
+                page4TableCell.AddParagraph().AppendText(string.Empty);
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell3_4Width;
+                page4TableCell.AddParagraph().AppendText(string.Empty);
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell3_4Width;
+                page4TableCell.AddParagraph().AppendText(string.Empty);
+                page4Table.Rows[page4TableRowCount-1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                page4Table.Rows[page4TableRowCount-1].Cells[1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                page4Table.Rows[page4TableRowCount-1].Cells[2].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                page4Table.Rows[page4TableRowCount-1].Cells[3].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+
+
+                // add LIABILITIES row to table
+                page4TableRow = page4Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                page4TableRowCount++;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.AddParagraph().AppendText("LIABILITIES").CharacterFormat.Bold = true;
+                page4TableCell.Width = page4TableCell1Width;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell2Width;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell3_4Width;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell3_4Width;
+
+                // add CURRENT LIABILITIES row to table
+                page4TableRow = page4Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                page4TableRowCount++;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.AddParagraph().AppendText("\u00A0CURRENT LIABILITIES").CharacterFormat.Bold = true;
+                page4TableCell.Width = page4TableCell1Width;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell2Width;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell3_4Width;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell3_4Width;
+
+                double totalCurrentLiabilitiesThisFiscalYear = 0;
+                double totalCurrentLiabilitiesLastFiscalYear = 0;
+
+                for (int i = 2; i <= page04CurrentLiabilitiesWorksheet.Dimension.End.Row; i++)
+                {
+                    page4TableRow = page4Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                    page4TableRowCount++;
+
+                    page4TableCell = page4TableRow.AddCell();
+                    page4TableCell.Width = page4TableCell1Width;
+                    page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{page04CurrentLiabilitiesWorksheet.Cells[i, 1].Text}");
+                    
+                    page4TableCell = page4TableRow.AddCell();
+                    page4TableCell.Width = page4TableCell2Width;
+                    page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{page04CurrentLiabilitiesWorksheet.Cells[i, 2].Text}");
+
+                    page4TableCell = page4TableRow.AddCell();
+                    page4TableCell.Width = page4TableCell3_4Width;
+                    page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{((double)Math.Truncate(double.Parse(page04CurrentLiabilitiesWorksheet.Cells[i, 3].Text))).ToString("C", CultureInfo.CurrentCulture)}");
+                    totalCurrentLiabilitiesThisFiscalYear = totalCurrentLiabilitiesThisFiscalYear + double.Parse(page04CurrentLiabilitiesWorksheet.Cells[i, 3].Text);
+
+                    page4TableCell = page4TableRow.AddCell();
+                    page4TableCell.Width = page4TableCell3_4Width;
+                    page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{((double)Math.Truncate(double.Parse(page04CurrentLiabilitiesWorksheet.Cells[i, 4].Text))).ToString("C", CultureInfo.CurrentCulture)}");
+                    totalCurrentLiabilitiesLastFiscalYear = totalCurrentLiabilitiesLastFiscalYear + double.Parse(page04CurrentLiabilitiesWorksheet.Cells[i, 4].Text);
+
+                    page4Table.Rows[page4TableRowCount-1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                    page4Table.Rows[page4TableRowCount-1].Cells[1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
+                    page4Table.Rows[page4TableRowCount-1].Cells[2].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                    page4Table.Rows[page4TableRowCount-1].Cells[3].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                }
+
+                // add provision for income tax to sheet from earlier
+                double thisYearProvisionForIncomeTax = (double)Math.Truncate((revenueTotalColumnC + expenseTotalColumnC) * columnCTaxRate);
+                double lastYearProvisionForIncomeTax = (double)Math.Truncate((revenueTotalColumnD + expenseTotalColumnD) * columnDTaxRate);
+                page4TableRow = page4Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                page4TableRowCount++;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell1Width;
+                page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0Provision for Income Tax");
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell2Width;
+                page4TableCell.AddParagraph().AppendText(string.Empty);
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell3_4Width;
+                page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{thisYearProvisionForIncomeTax.ToString("C", CultureInfo.CurrentCulture)}");
+                totalCurrentLiabilitiesThisFiscalYear = totalCurrentLiabilitiesThisFiscalYear + thisYearProvisionForIncomeTax;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell3_4Width;
+                page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{lastYearProvisionForIncomeTax.ToString("C", CultureInfo.CurrentCulture)}");
+                totalCurrentLiabilitiesLastFiscalYear = totalCurrentLiabilitiesLastFiscalYear + lastYearProvisionForIncomeTax;
+                page4Table.Rows[page4TableRowCount-1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                page4Table.Rows[page4TableRowCount-1].Cells[1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
+                page4Table.Rows[page4TableRowCount-1].Cells[2].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                page4Table.Rows[page4TableRowCount-1].Cells[3].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+
+                // total current liabilities
+                page4TableRow = page4Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                page4TableRowCount++;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell1Width;
+                page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0TOTAL CURRENT LIABILITIES").CharacterFormat.Bold = true;;
+                    
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell2Width;
+                page4TableCell.AddParagraph().AppendText($"");
+
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell3_4Width;
+                page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{((double)Math.Truncate(totalCurrentLiabilitiesThisFiscalYear)).ToString("C", CultureInfo.CurrentCulture)}");
+
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell3_4Width;
+                page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{((double)Math.Truncate(totalCurrentLiabilitiesLastFiscalYear)).ToString("C", CultureInfo.CurrentCulture)}");
+                
+                page4Table.Rows[page4TableRowCount-1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                page4Table.Rows[page4TableRowCount-1].Cells[1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
+                page4Table.Rows[page4TableRowCount-1].Cells[2].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                page4Table.Rows[page4TableRowCount-1].Cells[3].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+
+
+                // blank line
+                page4TableRow = page4Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                page4TableRowCount++;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell1Width;
+                page4TableCell.AddParagraph().AppendText(string.Empty);
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell2Width;
+                page4TableCell.AddParagraph().AppendText(string.Empty);
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell3_4Width;
+                page4TableCell.AddParagraph().AppendText(string.Empty);
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell3_4Width;
+                page4TableCell.AddParagraph().AppendText(string.Empty);
+                page4Table.Rows[page4TableRowCount-1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                page4Table.Rows[page4TableRowCount-1].Cells[1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                page4Table.Rows[page4TableRowCount-1].Cells[2].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                page4Table.Rows[page4TableRowCount-1].Cells[3].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+
+                // add NON-CURRENT LIABILITIES row to table
+                page4TableRow = page4Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                page4TableRowCount++;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.AddParagraph().AppendText("\u00A0NON-CURRENT LIABILITIES").CharacterFormat.Bold = true;
+                page4TableCell.Width = page4TableCell1Width;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell2Width;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell3_4Width;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell3_4Width;
+
+                double totalNonCurrentLiabilitiesThisFiscalYear = 0;
+                double totalNonCurrentLiabilitiesLastFiscalYear = 0;
+
+                int totalNonCurrentLiabilitiesSheetRow = page04NonCurrentLiabilitiesWorksheet.Dimension.End.Row;
+                if (totalNonCurrentLiabilitiesSheetRow >= 3)
+                {
+                    for (int i = 2; i <= page04NonCurrentLiabilitiesWorksheet.Dimension.End.Row; i++)
+                    {
+                        page4TableRow = page4Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                        page4TableRowCount++;
+
+                        page4TableCell = page4TableRow.AddCell();
+                        page4TableCell.Width = page4TableCell1Width;
+                        page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{page04NonCurrentLiabilitiesWorksheet.Cells[i, 1].Text}");
+                        
+                        page4TableCell = page4TableRow.AddCell();
+                        page4TableCell.Width = page4TableCell2Width;
+                        page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{page04NonCurrentLiabilitiesWorksheet.Cells[i, 2].Text}");
+
+                        page4TableCell = page4TableRow.AddCell();
+                        page4TableCell.Width = page4TableCell3_4Width;
+                        try {
+                            page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{((double)Math.Truncate(double.Parse(page04NonCurrentLiabilitiesWorksheet.Cells[i, 3].Text))).ToString("C", CultureInfo.CurrentCulture)}");
+                            totalNonCurrentLiabilitiesThisFiscalYear = totalNonCurrentLiabilitiesThisFiscalYear + double.Parse(page04NonCurrentLiabilitiesWorksheet.Cells[i, 3].Text);
+                        }
+                        catch {
+                            page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{((double)Math.Truncate(double.Parse("0.00"))).ToString("C", CultureInfo.CurrentCulture)}");
+                            totalNonCurrentLiabilitiesThisFiscalYear = totalNonCurrentLiabilitiesThisFiscalYear + double.Parse("0.00");
+                        }
+                        
+                        page4TableCell = page4TableRow.AddCell();
+                        page4TableCell.Width = page4TableCell3_4Width;
+                        try {
+                            page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{((double)Math.Truncate(double.Parse(page04NonCurrentLiabilitiesWorksheet.Cells[i, 4].Text))).ToString("C", CultureInfo.CurrentCulture)}");
+                            totalNonCurrentLiabilitiesThisFiscalYear = totalNonCurrentLiabilitiesThisFiscalYear + double.Parse(page04NonCurrentLiabilitiesWorksheet.Cells[i, 4].Text);
+                        }
+                        catch {
+                            page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{((double)Math.Truncate(double.Parse("0.00"))).ToString("C", CultureInfo.CurrentCulture)}");
+                            totalNonCurrentLiabilitiesLastFiscalYear = totalNonCurrentLiabilitiesLastFiscalYear + double.Parse("0.00");
+                        }
+                        
+                        page4Table.Rows[page4TableRowCount-1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                        page4Table.Rows[page4TableRowCount-1].Cells[1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
+                        page4Table.Rows[page4TableRowCount-1].Cells[2].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                        page4Table.Rows[page4TableRowCount-1].Cells[3].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                    }
+                }
+                else
+                {
+                    for (int i = 2; i <= page04NonCurrentLiabilitiesWorksheet.Dimension.End.Row; i++)
+                    {
+                        page4TableRow = page4Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                        page4TableRowCount++;
+
+                        page4TableCell = page4TableRow.AddCell();
+                        page4TableCell.Width = page4TableCell1Width;
+                        page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0-");
+                        
+                        page4TableCell = page4TableRow.AddCell();
+                        page4TableCell.Width = page4TableCell2Width;
+                        page4TableCell.AddParagraph().AppendText(string.Empty);
+
+                        page4TableCell = page4TableRow.AddCell();
+                        page4TableCell.Width = page4TableCell3_4Width;
+                        page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{((double)Math.Truncate(double.Parse("0.00"))).ToString("C", CultureInfo.CurrentCulture)}");
+                        totalNonCurrentLiabilitiesThisFiscalYear = totalNonCurrentLiabilitiesThisFiscalYear + double.Parse("0.00");
+                        
+                        page4TableCell = page4TableRow.AddCell();
+                        page4TableCell.Width = page4TableCell3_4Width;
+                        page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{((double)Math.Truncate(double.Parse("0.00"))).ToString("C", CultureInfo.CurrentCulture)}");
+                        totalNonCurrentLiabilitiesLastFiscalYear = totalNonCurrentLiabilitiesLastFiscalYear + double.Parse("0.00");
+                        
+                        page4Table.Rows[page4TableRowCount-1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                        page4Table.Rows[page4TableRowCount-1].Cells[1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
+                        page4Table.Rows[page4TableRowCount-1].Cells[2].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                        page4Table.Rows[page4TableRowCount-1].Cells[3].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                    }
+                }
+
+                // total non-current liabilities
+                page4TableRow = page4Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                page4TableRowCount++;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell1Width;
+                page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0TOTAL NON-CURRENT LIABILITIES").CharacterFormat.Bold = true;;
+                    
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell2Width;
+                page4TableCell.AddParagraph().AppendText($"");
+
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell3_4Width;
+                page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{((double)Math.Truncate(totalNonCurrentLiabilitiesThisFiscalYear)).ToString("C", CultureInfo.CurrentCulture)}");
+
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell3_4Width;
+                page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{((double)Math.Truncate(totalNonCurrentLiabilitiesLastFiscalYear)).ToString("C", CultureInfo.CurrentCulture)}");
+                
+                page4Table.Rows[page4TableRowCount-1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                page4Table.Rows[page4TableRowCount-1].Cells[1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
+                page4Table.Rows[page4TableRowCount-1].Cells[2].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                page4Table.Rows[page4TableRowCount-1].Cells[3].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+
+                // NET TOTAL LIABILITIES
+                page4TableRow = page4Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                page4TableRowCount++;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell1Width;
+                page4TableCell.AddParagraph().AppendText($"TOTAL LIABILITIES").CharacterFormat.Bold = true;;
+                    
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell2Width;
+                page4TableCell.AddParagraph().AppendText($"");
+
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell3_4Width;
+                page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{((double)Math.Truncate(totalCurrentLiabilitiesThisFiscalYear + totalNonCurrentLiabilitiesThisFiscalYear)).ToString("C", CultureInfo.CurrentCulture)}").CharacterFormat.Bold = true;
+
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell3_4Width;
+                page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{((double)Math.Truncate(totalCurrentLiabilitiesLastFiscalYear + totalNonCurrentLiabilitiesLastFiscalYear)).ToString("C", CultureInfo.CurrentCulture)}").CharacterFormat.Bold = true;
+                
+                page4Table.Rows[page4TableRowCount-1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                page4Table.Rows[page4TableRowCount-1].Cells[1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
+                page4Table.Rows[page4TableRowCount-1].Cells[2].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                page4Table.Rows[page4TableRowCount-1].Cells[3].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+
+                // blank line
+                page4TableRow = page4Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                page4TableRowCount++;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell1Width;
+                page4TableCell.AddParagraph().AppendText(string.Empty);
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell2Width;
+                page4TableCell.AddParagraph().AppendText(string.Empty);
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell3_4Width;
+                page4TableCell.AddParagraph().AppendText(string.Empty);
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell3_4Width;
+                page4TableCell.AddParagraph().AppendText(string.Empty);
+                page4Table.Rows[page4TableRowCount-1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                page4Table.Rows[page4TableRowCount-1].Cells[1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                page4Table.Rows[page4TableRowCount-1].Cells[2].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                page4Table.Rows[page4TableRowCount-1].Cells[3].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+
+                // add EQUITY row to table
+                page4TableRow = page4Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                page4TableRowCount++;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.AddParagraph().AppendText("EQUITY").CharacterFormat.Bold = true;
+                page4TableCell.Width = page4TableCell1Width;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell2Width;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell3_4Width;
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell3_4Width;
+                
+                // add Equity rows from XLSX file
+                double totalEquityThisFiscalYear = 0;
+                double totalEquityLastFiscalYear = 0;
+
+                int totalEquitySheetRow = page04EquityWorksheet.Dimension.End.Row;
+                if (totalEquitySheetRow >= 3)
+                {
+                    for (int i = 2; i <= page04EquityWorksheet.Dimension.End.Row; i++)
+                    {
+                        page4TableRow = page4Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                        page4TableRowCount++;
+
+                        page4TableCell = page4TableRow.AddCell();
+                        page4TableCell.Width = page4TableCell1Width;
+                        page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{page04EquityWorksheet.Cells[i, 1].Text}");
+                        
+                        page4TableCell = page4TableRow.AddCell();
+                        page4TableCell.Width = page4TableCell2Width;
+                        page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{page04EquityWorksheet.Cells[i, 2].Text}");
+
+                        page4TableCell = page4TableRow.AddCell();
+                        page4TableCell.Width = page4TableCell3_4Width;
+                        try {
+                            page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{((double)Math.Truncate(double.Parse(page04EquityWorksheet.Cells[i, 3].Text))).ToString("C", CultureInfo.CurrentCulture)}");
+                            totalEquityThisFiscalYear = totalEquityThisFiscalYear + double.Parse(page04EquityWorksheet.Cells[i, 3].Text);
+                        }
+                        catch {
+                            page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{((double)Math.Truncate(double.Parse("0.00"))).ToString("C", CultureInfo.CurrentCulture)}");
+                            totalEquityThisFiscalYear = totalEquityThisFiscalYear + double.Parse("0.00");
+                        }
+                        
+                        page4TableCell = page4TableRow.AddCell();
+                        page4TableCell.Width = page4TableCell3_4Width;
+                        try {
+                            page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{((double)Math.Truncate(double.Parse(page04EquityWorksheet.Cells[i, 4].Text))).ToString("C", CultureInfo.CurrentCulture)}");
+                            totalEquityLastFiscalYear = totalEquityLastFiscalYear + double.Parse(page04EquityWorksheet.Cells[i, 4].Text);
+                        }
+                        catch {
+                            page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{((double)Math.Truncate(double.Parse("0.00"))).ToString("C", CultureInfo.CurrentCulture)}");
+                            totalEquityLastFiscalYear = totalEquityLastFiscalYear + double.Parse("0.00");
+                        }
+                        
+                        page4Table.Rows[page4TableRowCount-1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                        page4Table.Rows[page4TableRowCount-1].Cells[1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
+                        page4Table.Rows[page4TableRowCount-1].Cells[2].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                        page4Table.Rows[page4TableRowCount-1].Cells[3].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                    }
+                }
+                else
+                {
+                    for (int i = 2; i <= page04EquityWorksheet.Dimension.End.Row; i++)
+                    {
+                        page4TableRow = page4Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                        page4TableRowCount++;
+
+                        page4TableCell = page4TableRow.AddCell();
+                        page4TableCell.Width = page4TableCell1Width;
+                        page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0-");
+                        
+                        page4TableCell = page4TableRow.AddCell();
+                        page4TableCell.Width = page4TableCell2Width;
+                        page4TableCell.AddParagraph().AppendText(string.Empty);
+
+                        page4TableCell = page4TableRow.AddCell();
+                        page4TableCell.Width = page4TableCell3_4Width;
+                        page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{((double)Math.Truncate(double.Parse("0.00"))).ToString("C", CultureInfo.CurrentCulture)}");
+                        totalEquityThisFiscalYear = totalEquityThisFiscalYear + double.Parse("0.00");
+                        
+                        page4TableCell = page4TableRow.AddCell();
+                        page4TableCell.Width = page4TableCell3_4Width;
+                        page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0{((double)Math.Truncate(double.Parse("0.00"))).ToString("C", CultureInfo.CurrentCulture)}");
+                        totalEquityLastFiscalYear = totalEquityLastFiscalYear + double.Parse("0.00");
+                        
+                        page4Table.Rows[page4TableRowCount-1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                        page4Table.Rows[page4TableRowCount-1].Cells[1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
+                        page4Table.Rows[page4TableRowCount-1].Cells[2].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                        page4Table.Rows[page4TableRowCount-1].Cells[3].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                    }
+                }
+
+                // add Equity Retained Earnings
+                page4TableRow = page4Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                page4TableRowCount++;
+
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell1Width;
+                page4TableCell.AddParagraph().AppendText($"\u00A0\u00A0Retained earnings");
+                
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell2Width;
+                page4TableCell.AddParagraph().AppendText(string.Empty);
+
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell3_4Width;
+                page4TableCell.AddParagraph().AppendText($"{thisFiscalYearFinalRetainedEarnings.ToString("C", CultureInfo.CurrentCulture)}");
+                
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell3_4Width;
+                page4TableCell.AddParagraph().AppendText($"{((double)Math.Truncate(profitFromColumnD)).ToString("C", CultureInfo.CurrentCulture)}");
+                
+                page4Table.Rows[page4TableRowCount-1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                page4Table.Rows[page4TableRowCount-1].Cells[1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
+                page4Table.Rows[page4TableRowCount-1].Cells[2].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                page4Table.Rows[page4TableRowCount-1].Cells[3].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+
+                // add TOTAL EQUITY row
+                page4TableRow = page4Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                page4TableRowCount++;
+
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell1Width;
+                page4TableCell.AddParagraph().AppendText($"TOTAL EQUITY").CharacterFormat.Bold = true;
+                
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell2Width;
+                page4TableCell.AddParagraph().AppendText(string.Empty);
+
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell3_4Width;
+                page4TableCell.AddParagraph().AppendText($"{(thisFiscalYearFinalRetainedEarnings + totalEquityThisFiscalYear).ToString("C", CultureInfo.CurrentCulture)}");
+                
+                page4TableCell = page4TableRow.AddCell();
+                page4TableCell.Width = page4TableCell3_4Width;
+                page4TableCell.AddParagraph().AppendText($"{((double)Math.Truncate(profitFromColumnD + totalEquityLastFiscalYear)).ToString("C", CultureInfo.CurrentCulture)}");
+                
+                page4Table.Rows[page4TableRowCount-1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                page4Table.Rows[page4TableRowCount-1].Cells[1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
+                page4Table.Rows[page4TableRowCount-1].Cells[2].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                page4Table.Rows[page4TableRowCount-1].Cells[3].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
 
                 #endregion Page04
 
@@ -1000,6 +1569,526 @@ namespace FinReportBuilderCLI.Services
                 page06TitleParagraph.AppendText("__________________________________________________________________________");
                 page06TitleParagraph.ApplyStyle("Page06Style01");
                 page06TitleParagraph.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
+
+                // Page06 - Sheet Names
+
+                // NAME OF WORKSHEETS
+                // foreach (var i in package.Workbook.Worksheets)
+                // {
+                //     Console.WriteLine($"Worksheet Name: {i.Name}");
+                // }
+
+                // Page06 - Initialise table
+                IWTable page6Table = page06.AddTable();
+                page6Table.TableFormat.Borders.BorderType = BorderStyle.None;
+                page6Table.TableFormat.HorizontalAlignment = RowAlignment.Center;
+                int page6TableRowCount = 0;
+
+                // Page06 - add first row into table
+                WTableRow page6TableRow = page6Table.AddRow();
+                page6TableRowCount++;
+                int page6TableCell1Width = 270;
+                int page6TableCell2Width = 70;
+                int page6TableCell3_4Width = 90;
+
+                // add cells to first row (heading row)
+                // this will iterate through all the sheets with the name (regex)^NOTES_.* until it finds one, to add this page to the document 
+                WTableCell page6TableCell = page6TableRow.AddCell();
+                page6TableCell.Width = page6TableCell1Width;
+                page6TableCell = page6TableRow.AddCell();
+                page6TableCell.AddParagraph().AppendText("NOTE\n").CharacterFormat.Bold = true;
+                page6TableCell.Width = page6TableCell2Width;
+                page6Table.Rows[0].Cells[1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
+                int page6StartCell = 2;
+
+                foreach (ExcelWorksheet wkSheet in package.Workbook.Worksheets)
+                {
+                    if (wkSheet.Name.ToString().ToLower() == "NOTES_TradeReceivables".ToLower())
+                    {
+                        // loop through  the heading row to get the dates and add them, if this exists
+                        for (int i = 3; i <= wkSheet.Dimension.End.Column; i++)
+                        {
+                            page6TableCell = page6TableRow.AddCell();
+                            page6TableCell.Width = page6TableCell3_4Width;
+                            page6TableCell.AddParagraph().AppendText($"{(double)Math.Truncate(double.Parse(wkSheet.Cells[1, i].Text))}\n$").CharacterFormat.Bold = true;
+                            page6Table.Rows[0].Cells[page6StartCell].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
+                            page6StartCell++;
+                        }
+
+                        // add the rows of data into table now
+                        page6TableRow = page6Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                        page6TableRowCount++;
+
+                        // add TradeReceivables Data
+                        page6TableCell = page6TableRow.AddCell();
+                        page6TableCell.Width = page6TableCell1Width;
+                        page6TableCell.AddParagraph().AppendText($"Trade and Other Receivables").CharacterFormat.Bold = true;
+                        page6Table.Rows[page6Table.Rows.Count - 1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+
+                        // add middle cell
+                        page6TableCell = page6TableRow.AddCell();
+                        page6TableCell.Width = page6TableCell2Width;
+
+                        // add additional columns (to max number in sheet)
+                        for (int i = page6StartCell - 1; i <= page6StartCell; i++)
+                        {
+                            page6TableCell = page6TableRow.AddCell();
+                            page6TableCell.Width = page6TableCell3_4Width;
+                        }
+
+                        // add all the rows of data under the header row for this particular worksheet now
+                        for (int i = 2; i <= wkSheet.Dimension.End.Row; i++)
+                        {
+                            page6TableRow = page6Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                            page6TableRowCount++;
+
+                            page6TableCell = page6TableRow.AddCell();
+                            page6TableCell.Width = page6TableCell1Width;
+                            page6TableCell.AddParagraph().AppendText($"\u00A0\u00A0{wkSheet.Cells[i, 1].Text}");
+                            page6Table.Rows[page6TableRowCount-1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+
+                            page6TableCell = page6TableRow.AddCell();
+                            page6TableCell.Width = page6TableCell2Width;
+                            page6TableCell.AddParagraph().AppendText($"{wkSheet.Cells[i, 2].Text}");
+                            page6Table.Rows[page6TableRowCount-1].Cells[1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+
+                            for (int j = page6StartCell - 1; j <= page6StartCell; j++)
+                            {
+                                page6TableCell = page6TableRow.AddCell();
+                                page6TableCell.Width = page6TableCell3_4Width;
+                                page6TableCell.AddParagraph().AppendText($"{((double)Math.Truncate(double.Parse(wkSheet.Cells[i, j].Text))).ToString("C", CultureInfo.CurrentCulture)}");
+                                page6Table.Rows[page6TableRowCount-1].Cells[j-1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                            }
+                        }
+
+                        // add blank row
+                        page6TableRow = page6Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                        page6TableRowCount++;
+                        page6TableCell = page6TableRow.AddCell();
+                        page6TableCell.Width = page6TableCell1Width;
+                        page6TableCell = page6TableRow.AddCell();
+                        page6TableCell.Width = page6TableCell2Width;
+                        for (int i = 2; i < wkSheet.Dimension.End.Column; i++)
+                        {
+                            page6TableCell = page6TableRow.AddCell();
+                            page6TableCell.Width = page6TableCell3_4Width;
+                        }
+                    }
+
+                    else if (wkSheet.Name.ToString().ToLower() == "NOTES_NonCurrentLiabilities".ToLower())
+                    {
+                        // // loop through  the heading row to get the dates and add them, if this exists
+                        // for (int i = 3; i <= wkSheet.Dimension.End.Column; i++)
+                        // {
+                        //     page6TableCell = page6TableRow.AddCell();
+                        //     page6TableCell.Width = page6TableCell3_4Width;
+                        //     page6TableCell.AddParagraph().AppendText($"{(double)Math.Truncate(double.Parse(wkSheet.Cells[1, i].Text))}\n$").CharacterFormat.Bold = true;
+                        //     page6Table.Rows[page6Table.Rows.Count - 1].Cells[page6StartCell].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
+                        //     page6StartCell++;
+                        // }
+
+                        // add the rows of data into table now
+                        page6TableRow = page6Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                        page6TableRowCount++;
+
+                        // add TradeReceivables Data
+                        page6TableCell = page6TableRow.AddCell();
+                        page6TableCell.Width = page6TableCell1Width;
+                        page6TableCell.AddParagraph().AppendText($"Non-Current Liabilities").CharacterFormat.Bold = true;
+                        page6Table.Rows[page6Table.Rows.Count - 1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+
+                        // add middle cell
+                        page6TableCell = page6TableRow.AddCell();
+                        page6TableCell.Width = page6TableCell2Width;
+
+                        // add additional columns (to max number in sheet)
+                        for (int i = page6StartCell - 1; i <= page6StartCell; i++)
+                        {
+                            page6TableCell = page6TableRow.AddCell();
+                            page6TableCell.Width = page6TableCell3_4Width;
+                        }
+
+                        // add all the rows of data under the header row for this particular worksheet now
+                        for (int i = 2; i <= wkSheet.Dimension.End.Row; i++)
+                        {
+                            page6TableRow = page6Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                            page6TableRowCount++;
+
+                            page6TableCell = page6TableRow.AddCell();
+                            page6TableCell.Width = page6TableCell1Width;
+                            page6TableCell.AddParagraph().AppendText($"\u00A0\u00A0{wkSheet.Cells[i, 1].Text}");
+                            page6Table.Rows[page6TableRowCount-1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+
+                            page6TableCell = page6TableRow.AddCell();
+                            page6TableCell.Width = page6TableCell2Width;
+                            page6TableCell.AddParagraph().AppendText($"{wkSheet.Cells[i, 2].Text}");
+                            page6Table.Rows[page6TableRowCount - 1].Cells[1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+
+                            for (int j = page6StartCell - 1; j <= page6StartCell; j++)
+                            {
+                                page6TableCell = page6TableRow.AddCell();
+                                page6TableCell.Width = page6TableCell3_4Width;
+                                page6TableCell.AddParagraph().AppendText($"{((double)Math.Truncate(double.Parse(wkSheet.Cells[i, j].Text))).ToString("C", CultureInfo.CurrentCulture)}");
+                                page6Table.Rows[page6TableRowCount - 1].Cells[j-1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                            }
+                        }
+
+                        // add blank row
+                        page6TableRow = page6Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                        page6TableRowCount++;
+                        page6TableCell = page6TableRow.AddCell();
+                        page6TableCell.Width = page6TableCell1Width;
+                        page6TableCell = page6TableRow.AddCell();
+                        page6TableCell.Width = page6TableCell2Width;
+                        for (int i = 2; i < wkSheet.Dimension.End.Column; i++)
+                        {
+                            page6TableCell = page6TableRow.AddCell();
+                            page6TableCell.Width = page6TableCell3_4Width;
+                        }
+                    }
+
+                    else if (wkSheet.Name.ToString().ToLower() == "NOTES_PlantEquipment".ToLower())
+                    {
+                        // // loop through  the heading row to get the dates and add them, if this exists
+                        // for (int i = 3; i <= wkSheet.Dimension.End.Column; i++)
+                        // {
+                        //     page6TableCell = page6TableRow.AddCell();
+                        //     page6TableCell.Width = page6TableCell3_4Width;
+                        //     page6TableCell.AddParagraph().AppendText($"{(double)Math.Truncate(double.Parse(wkSheet.Cells[1, i].Text))}\n$").CharacterFormat.Bold = true;
+                        //     page6Table.Rows[page6Table.Rows.Count - 1].Cells[page6StartCell].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
+                        //     page6StartCell++;
+                        // }
+
+                        // add the rows of data into table now
+                        page6TableRow = page6Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                        page6TableRowCount++;
+
+                        // add TradeReceivables Data
+                        page6TableCell = page6TableRow.AddCell();
+                        page6TableCell.Width = page6TableCell1Width;
+                        page6TableCell.AddParagraph().AppendText($"Plant and Equipment").CharacterFormat.Bold = true;
+                        page6Table.Rows[page6Table.Rows.Count - 1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+
+                        // add middle cell
+                        page6TableCell = page6TableRow.AddCell();
+                        page6TableCell.Width = page6TableCell2Width;
+
+                        // add additional columns (to max number in sheet)
+                        for (int i = page6StartCell - 1; i <= page6StartCell; i++)
+                        {
+                            page6TableCell = page6TableRow.AddCell();
+                            page6TableCell.Width = page6TableCell3_4Width;
+                        }
+
+                        // add all the rows of data under the header row for this particular worksheet now
+                        double thisYearPlantEquipment = 0;
+                        double lastYearPlantEquipment = 0;
+                        for (int i = 2; i <= wkSheet.Dimension.End.Row; i++)
+                        {
+                            page6TableRow = page6Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                            page6TableRowCount++;
+
+                            page6TableCell = page6TableRow.AddCell();
+                            page6TableCell.Width = page6TableCell1Width;
+                            page6TableCell.AddParagraph().AppendText($"\u00A0\u00A0{wkSheet.Cells[i, 1].Text}");
+                            page6Table.Rows[page6TableRowCount - 1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+
+                            page6TableCell = page6TableRow.AddCell();
+                            page6TableCell.Width = page6TableCell2Width;
+                            page6TableCell.AddParagraph().AppendText($"{wkSheet.Cells[i, 2].Text}");
+                            page6Table.Rows[page6TableRowCount - 1].Cells[1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+
+                            for (int j = page6StartCell - 1; j <= page6StartCell; j++)
+                            {
+                                page6TableCell = page6TableRow.AddCell();
+                                page6TableCell.Width = page6TableCell3_4Width;
+                                page6TableCell.AddParagraph().AppendText($"{((double)Math.Truncate(double.Parse(wkSheet.Cells[i, j].Text))).ToString("C", CultureInfo.CurrentCulture)}");
+                                page6Table.Rows[page6TableRowCount - 1].Cells[j - 1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                                if (j == page6StartCell - 1)
+                                {
+                                    thisYearPlantEquipment = thisYearPlantEquipment + (double)Math.Truncate(double.Parse(wkSheet.Cells[i, j].Text));
+                                }
+                                else
+                                {
+                                    lastYearPlantEquipment = lastYearPlantEquipment + (double)Math.Truncate(double.Parse(wkSheet.Cells[i, j].Text));
+                                }
+                            }
+                        }
+                            //add total row
+                            page6TableRow = page6Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                            page6TableRowCount++;
+
+                            page6TableCell = page6TableRow.AddCell();
+                            page6TableCell.Width = page6TableCell1Width;
+                            page6TableCell.AddParagraph().AppendText($"\u00A0\u00A0Total Plant and Equipment").CharacterFormat.Bold = true;
+                            page6Table.Rows[page6TableRowCount-1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+
+                            page6TableCell = page6TableRow.AddCell();
+                            page6TableCell.Width = page6TableCell2Width;
+                            page6TableCell.AddParagraph().AppendText(string.Empty);
+                            page6Table.Rows[page6TableRowCount - 1].Cells[1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+
+                            // page6TableCell = page6TableRow.AddCell();
+                            // page6TableCell.Width = page6TableCell3_4Width;
+                            // page6TableCell.AddParagraph().AppendText($"{((double)Math.Truncate(thisYearPlantEquipment)).ToString("C", CultureInfo.CurrentCulture)}");
+                            // page6Table.Rows[page6TableRowCount - 1].Cells[2].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+
+                            // page6TableCell = page6TableRow.AddCell();
+                            // page6TableCell.Width = page6TableCell3_4Width;
+                            // page6TableCell.AddParagraph().AppendText($"{((double)Math.Truncate(lastYearPlantEquipment)).ToString("C", CultureInfo.CurrentCulture)}");
+                            // page6Table.Rows[page6TableRowCount - 1].Cells[3].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+
+                            for (int j = page6StartCell - 1; j <= page6StartCell; j++)
+                            {
+                                
+                                if (j == page6StartCell - 1)
+                                {
+                                    page6TableCell = page6TableRow.AddCell();
+                                    page6TableCell.Width = page6TableCell3_4Width;
+                                    page6TableCell.AddParagraph().AppendText($"{((double)Math.Truncate(thisYearPlantEquipment)).ToString("C", CultureInfo.CurrentCulture)}");
+                                    page6Table.Rows[page6TableRowCount - 1].Cells[j - 1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                                }
+                                else
+                                {
+                                    page6TableCell = page6TableRow.AddCell();
+                                    page6TableCell.Width = page6TableCell3_4Width;
+                                    page6TableCell.AddParagraph().AppendText($"{((double)Math.Truncate(lastYearPlantEquipment)).ToString("C", CultureInfo.CurrentCulture)}");
+                                    page6Table.Rows[page6TableRowCount - 1].Cells[j - 1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                                }
+                            }
+                        
+
+                        // add blank row
+                        page6TableRow = page6Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                        page6TableRowCount++;
+                        page6TableCell = page6TableRow.AddCell();
+                        page6TableCell.Width = page6TableCell1Width;
+                        page6TableCell = page6TableRow.AddCell();
+                        page6TableCell.Width = page6TableCell2Width;
+                        for (int i = 2; i < wkSheet.Dimension.End.Column; i++)
+                        {
+                            page6TableCell = page6TableRow.AddCell();
+                            page6TableCell.Width = page6TableCell3_4Width;
+                        }
+                    }
+
+                    else if (wkSheet.Name.ToString().ToLower() == "NOTES_MotorVehicle".ToLower())
+                    {
+                        // // loop through  the heading row to get the dates and add them, if this exists
+                        // for (int i = 3; i <= wkSheet.Dimension.End.Column; i++)
+                        // {
+                        //     page6TableCell = page6TableRow.AddCell();
+                        //     page6TableCell.Width = page6TableCell3_4Width;
+                        //     page6TableCell.AddParagraph().AppendText($"{(double)Math.Truncate(double.Parse(wkSheet.Cells[1, i].Text))}\n$").CharacterFormat.Bold = true;
+                        //     page6Table.Rows[page6Table.Rows.Count - 1].Cells[page6StartCell].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
+                        //     page6StartCell++;
+                        // }
+
+                        // add the rows of data into table now
+                        page6TableRow = page6Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                        page6TableRowCount++;
+
+                        // add TradeReceivables Data
+                        page6TableCell = page6TableRow.AddCell();
+                        page6TableCell.Width = page6TableCell1Width;
+                        page6TableCell.AddParagraph().AppendText($"Plant and Equipment").CharacterFormat.Bold = true;
+                        page6Table.Rows[page6Table.Rows.Count - 1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+
+                        // add middle cell
+                        page6TableCell = page6TableRow.AddCell();
+                        page6TableCell.Width = page6TableCell2Width;
+
+                        // add additional columns (to max number in sheet)
+                        for (int i = page6StartCell - 1; i <= page6StartCell; i++)
+                        {
+                            page6TableCell = page6TableRow.AddCell();
+                            page6TableCell.Width = page6TableCell3_4Width;
+                        }
+
+                        // add all the rows of data under the header row for this particular worksheet now
+                        for (int i = 2; i <= wkSheet.Dimension.End.Row; i++)
+                        {
+                            page6TableRow = page6Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                            page6TableRowCount++;
+
+                            page6TableCell = page6TableRow.AddCell();
+                            page6TableCell.Width = page6TableCell1Width;
+                            page6TableCell.AddParagraph().AppendText($"\u00A0\u00A0{wkSheet.Cells[i, 1].Text}");
+                            page6Table.Rows[page6TableRowCount-1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+
+                            page6TableCell = page6TableRow.AddCell();
+                            page6TableCell.Width = page6TableCell2Width;
+                            page6TableCell.AddParagraph().AppendText($"{wkSheet.Cells[i, 2].Text}");
+                            page6Table.Rows[page6TableRowCount - 1].Cells[1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+
+                            for (int j = page6StartCell - 1; j <= page6StartCell; j++)
+                            {
+                                page6TableCell = page6TableRow.AddCell();
+                                page6TableCell.Width = page6TableCell3_4Width;
+                                page6TableCell.AddParagraph().AppendText($"{((double)Math.Truncate(double.Parse(wkSheet.Cells[i, j].Text))).ToString("C", CultureInfo.CurrentCulture)}");
+                                page6Table.Rows[page6TableRowCount - 1].Cells[j-1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                            }
+                        }
+
+                        // add blank row
+                        page6TableRow = page6Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                        page6TableRowCount++;
+                        page6TableCell = page6TableRow.AddCell();
+                        page6TableCell.Width = page6TableCell1Width;
+                        page6TableCell = page6TableRow.AddCell();
+                        page6TableCell.Width = page6TableCell2Width;
+                        for (int i = 2; i < wkSheet.Dimension.End.Column; i++)
+                        {
+                            page6TableCell = page6TableRow.AddCell();
+                            page6TableCell.Width = page6TableCell3_4Width;
+                        }
+                    }
+
+                    else if (wkSheet.Name.ToString().ToLower() == "NOTES_IntangibleAssets".ToLower())
+                    {
+                        // // loop through  the heading row to get the dates and add them, if this exists
+                        // for (int i = 3; i <= wkSheet.Dimension.End.Column; i++)
+                        // {
+                        //     page6TableCell = page6TableRow.AddCell();
+                        //     page6TableCell.Width = page6TableCell3_4Width;
+                        //     page6TableCell.AddParagraph().AppendText($"{(double)Math.Truncate(double.Parse(wkSheet.Cells[1, i].Text))}\n$").CharacterFormat.Bold = true;
+                        //     page6Table.Rows[page6Table.Rows.Count - 1].Cells[page6StartCell].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
+                        //     page6StartCell++;
+                        // }
+
+                        // add the rows of data into table now
+                        page6TableRow = page6Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                        page6TableRowCount++;
+
+                        // add TradeReceivables Data
+                        page6TableCell = page6TableRow.AddCell();
+                        page6TableCell.Width = page6TableCell1Width;
+                        page6TableCell.AddParagraph().AppendText($"Intangible Assets").CharacterFormat.Bold = true;
+                        page6Table.Rows[page6Table.Rows.Count - 1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+
+                        // add middle cell
+                        page6TableCell = page6TableRow.AddCell();
+                        page6TableCell.Width = page6TableCell2Width;
+
+                        // add additional columns (to max number in sheet)
+                        for (int i = page6StartCell - 1; i <= page6StartCell; i++)
+                        {
+                            page6TableCell = page6TableRow.AddCell();
+                            page6TableCell.Width = page6TableCell3_4Width;
+                        }
+
+                        // add all the rows of data under the header row for this particular worksheet now
+                        double thisYearPlantEquipment = 0;
+                        double lastYearPlantEquipment = 0;
+                        for (int i = 2; i <= wkSheet.Dimension.End.Row; i++)
+                        {
+                            page6TableRow = page6Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                            page6TableRowCount++;
+
+                            page6TableCell = page6TableRow.AddCell();
+                            page6TableCell.Width = page6TableCell1Width;
+                            page6TableCell.AddParagraph().AppendText($"\u00A0\u00A0{wkSheet.Cells[i, 1].Text}");
+                            page6Table.Rows[page6TableRowCount - 1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+
+                            page6TableCell = page6TableRow.AddCell();
+                            page6TableCell.Width = page6TableCell2Width;
+                            page6TableCell.AddParagraph().AppendText($"{wkSheet.Cells[i, 2].Text}");
+                            page6Table.Rows[page6TableRowCount - 1].Cells[1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+
+                            for (int j = page6StartCell - 1; j <= page6StartCell; j++)
+                            {
+                                page6TableCell = page6TableRow.AddCell();
+                                page6TableCell.Width = page6TableCell3_4Width;
+                                page6TableCell.AddParagraph().AppendText($"{((double)Math.Truncate(double.Parse(wkSheet.Cells[i, j].Text))).ToString("C", CultureInfo.CurrentCulture)}");
+                                page6Table.Rows[page6TableRowCount - 1].Cells[j - 1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                                if (j == page6StartCell - 1)
+                                {
+                                    thisYearPlantEquipment = thisYearPlantEquipment + (double)Math.Truncate(double.Parse(wkSheet.Cells[i, j].Text));
+                                }
+                                else
+                                {
+                                    lastYearPlantEquipment = lastYearPlantEquipment + (double)Math.Truncate(double.Parse(wkSheet.Cells[i, j].Text));
+                                }
+                            }
+                        }
+                            //add total row
+                            page6TableRow = page6Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                            page6TableRowCount++;
+
+                            page6TableCell = page6TableRow.AddCell();
+                            page6TableCell.Width = page6TableCell1Width;
+                            page6TableCell.AddParagraph().AppendText($"\u00A0\u00A0Total Intangible Costs").CharacterFormat.Bold = true;
+                            page6Table.Rows[page6TableRowCount-1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+
+                            page6TableCell = page6TableRow.AddCell();
+                            page6TableCell.Width = page6TableCell2Width;
+                            page6TableCell.AddParagraph().AppendText(string.Empty);
+                            page6Table.Rows[page6TableRowCount - 1].Cells[1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+
+                            // page6TableCell = page6TableRow.AddCell();
+                            // page6TableCell.Width = page6TableCell3_4Width;
+                            // page6TableCell.AddParagraph().AppendText($"{((double)Math.Truncate(thisYearPlantEquipment)).ToString("C", CultureInfo.CurrentCulture)}");
+                            // page6Table.Rows[page6TableRowCount - 1].Cells[2].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+
+                            // page6TableCell = page6TableRow.AddCell();
+                            // page6TableCell.Width = page6TableCell3_4Width;
+                            // page6TableCell.AddParagraph().AppendText($"{((double)Math.Truncate(lastYearPlantEquipment)).ToString("C", CultureInfo.CurrentCulture)}");
+                            // page6Table.Rows[page6TableRowCount - 1].Cells[3].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+
+                            for (int j = page6StartCell - 1; j <= page6StartCell; j++)
+                            {
+                                
+                                if (j == page6StartCell - 1)
+                                {
+                                    page6TableCell = page6TableRow.AddCell();
+                                    page6TableCell.Width = page6TableCell3_4Width;
+                                    page6TableCell.AddParagraph().AppendText($"{((double)Math.Truncate(thisYearPlantEquipment)).ToString("C", CultureInfo.CurrentCulture)}");
+                                    page6Table.Rows[page6TableRowCount - 1].Cells[j - 1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                                }
+                                else
+                                {
+                                    page6TableCell = page6TableRow.AddCell();
+                                    page6TableCell.Width = page6TableCell3_4Width;
+                                    page6TableCell.AddParagraph().AppendText($"{((double)Math.Truncate(lastYearPlantEquipment)).ToString("C", CultureInfo.CurrentCulture)}");
+                                    page6Table.Rows[page6TableRowCount - 1].Cells[j - 1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                                }
+                            }
+                        
+
+                        // add blank row
+                        page6TableRow = page6Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                        page6TableRowCount++;
+                        page6TableCell = page6TableRow.AddCell();
+                        page6TableCell.Width = page6TableCell1Width;
+                        page6TableCell = page6TableRow.AddCell();
+                        page6TableCell.Width = page6TableCell2Width;
+                        for (int i = 2; i < wkSheet.Dimension.End.Column; i++)
+                        {
+                            page6TableCell = page6TableRow.AddCell();
+                            page6TableCell.Width = page6TableCell3_4Width;
+                        }
+                    }
+                }
+
+                // add the page total
+                page6TableRow = page6Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                page6TableRowCount++;
+
+                // add TradeReceivables Data
+                page6TableCell = page6TableRow.AddCell();
+                page6TableCell.Width = page6TableCell1Width;
+                page6TableCell.AddParagraph().AppendText($"TOTAL").CharacterFormat.Bold = true;
+                page6Table.Rows[page6Table.Rows.Count - 1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+
+                // add middle cell
+                page6TableCell = page6TableRow.AddCell();
+                page6TableCell.Width = page6TableCell2Width;
+
+                page6TableCell = page6TableRow.AddCell();
+                page6TableCell.Width = page6TableCell3_4Width;
+
+                page6TableCell = page6TableRow.AddCell();
+                page6TableCell.Width = page6TableCell3_4Width;
                 #endregion Page06
 
                 #region Page07
@@ -1089,7 +2178,7 @@ namespace FinReportBuilderCLI.Services
 
                 // Page07 - Declaration02
                 IWParagraph page07Declaration02 = page07.AddParagraph();
-                page07Declaration02.AppendText("2.\tIn the director's opnion, there are reasonable grounds to believe that the company will be able to pay its debts as and when they become due and payable.\n");
+                page07Declaration02.AppendText("2.\tIn the director's opinion, there are reasonable grounds to believe that the company will be able to pay its debts as and when they become due and payable.\n");
                 page07Declaration02.ParagraphFormat.FirstLineIndent = -36;
                 page07Declaration02.ParagraphFormat.LeftIndent = 36;
                 page07Declaration02.ParagraphFormat.Keep = true;
@@ -1302,6 +2391,434 @@ namespace FinReportBuilderCLI.Services
                 page08CompilationDated.Items.Add(dayOfTextRange);
                 page08CompilationDated.Items.Add(calendarMonthTextRange);
                 #endregion Page08
+
+                #region Page09
+                // Page09 - Compilation Report
+                IWSection page09 = wordDocument.AddSection();
+
+                // Page09 - Page Setup
+                page09.PageSetup.Orientation = PageOrientation.Portrait;
+                page09.PageSetup.Margins.All = 36;
+
+                // Page09 - Paragraph Style 01 (Title)
+                IWParagraphStyle page09Style01 = wordDocument.AddParagraphStyle("Page09Style01");
+                page09Style01.ParagraphFormat.BackColor = Color.White;
+                page09Style01.ParagraphFormat.AfterSpacing = 16f;
+                page09Style01.ParagraphFormat.BeforeSpacing = 16f;
+                page09Style01.ParagraphFormat.LineSpacing = 14f;
+                page09Style01.CharacterFormat.FontName = "Times New Roman";
+                page09Style01.CharacterFormat.FontSize = 14f;
+                page09Style01.CharacterFormat.Bold = true;
+
+                // Page09 - Paragraph Style 02 (Body)
+                IWParagraphStyle page09Style02 = wordDocument.AddParagraphStyle("Page09Style02");
+                page09Style02.ParagraphFormat.BackColor = Color.White;
+                page09Style02.ParagraphFormat.AfterSpacing = 0f;
+                page09Style02.ParagraphFormat.BeforeSpacing = 0f;
+                page09Style02.ParagraphFormat.LineSpacing = 12f;
+                page09Style02.CharacterFormat.FontName = "Times New Roman";
+                page09Style02.CharacterFormat.FontSize = 12f;
+                page09Style02.CharacterFormat.Bold = false;
+
+                // Page09 - Paragraph Style 02 (Body-Bold)
+                IWParagraphStyle page09Style02Bold = wordDocument.AddParagraphStyle("Page09Style02Bold");
+                page09Style02Bold.ParagraphFormat.BackColor = Color.White;
+                page09Style02Bold.ParagraphFormat.AfterSpacing = 6f;
+                page09Style02Bold.ParagraphFormat.BeforeSpacing = 0f;
+                page09Style02Bold.ParagraphFormat.LineSpacing = 12f;
+                page09Style02Bold.CharacterFormat.FontName = "Times New Roman";
+                page09Style02Bold.CharacterFormat.FontSize = 12f;
+                page09Style02Bold.CharacterFormat.Bold = true;
+
+                // Page09 - Title Paragraph
+                IWParagraph page09TitleParagraph = page09.AddParagraph();
+
+                page09TitleParagraph.AppendText($"{clientName.ToUpperInvariant()}");
+                page09TitleParagraph.AppendBreak(BreakType.LineBreak);
+                page09TitleParagraph.AppendText(companyAbnAcn);
+                page09TitleParagraph.AppendBreak(BreakType.LineBreak);
+                page09TitleParagraph.AppendBreak(BreakType.LineBreak);
+                page09TitleParagraph.AppendText("profit and loss statement".ToUpperInvariant());
+                page09TitleParagraph.AppendBreak(BreakType.LineBreak);
+                page09TitleParagraph.AppendText("for the year ended".ToUpperInvariant());
+                page09TitleParagraph.AppendBreak(BreakType.LineBreak);
+                page09TitleParagraph.AppendText("30 june 2021".ToUpperInvariant());
+                page09TitleParagraph.AppendBreak(BreakType.LineBreak);
+
+                // Page09 - HR
+                page09TitleParagraph.AppendText("__________________________________________________________________________");
+                page09TitleParagraph.ApplyStyle("Page09Style01");
+                page09TitleParagraph.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
+
+                // Page09 - Initialise table
+                IWTable page9Table = page09.AddTable();
+                page9Table.TableFormat.Borders.BorderType = BorderStyle.None;
+                page9Table.TableFormat.HorizontalAlignment = RowAlignment.Center;
+                int page9TableRowCount = 0;
+
+                // Page09 - add first row into table
+                WTableRow page9TableRow = page9Table.AddRow();
+                page9TableRowCount++;
+                int page9TableCell1Width = 270;
+                int page9TableCell2Width = 70;
+                int page9TableCell3_4Width = 90;
+
+                // add cells to first row (heading row)
+                // this will iterate through all the sheets with the name (regex)^NOTES_.* until it finds one, to add this page to the document 
+                WTableCell page9TableCell = page9TableRow.AddCell();
+                page9TableCell.Width = page9TableCell1Width;
+                page9TableCell = page9TableRow.AddCell();
+                page9TableCell.AddParagraph().AppendText("NOTE\n").CharacterFormat.Bold = true;
+                page9TableCell.Width = page9TableCell2Width;
+                page9Table.Rows[0].Cells[1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
+                int page9StartCell = 2;
+
+                foreach (ExcelWorksheet wkSheet in package.Workbook.Worksheets)
+                {
+                    if (wkSheet.Name.ToString().ToLower() == "NOTES_Income".ToLower())
+                    {
+                        double notesIncomeTotalThisYear = 0;
+                        double notesIncomeTotalLastYear = 0;
+
+                        // loop through  the heading row to get the dates and add them, if this exists
+                        for (int i = 3; i <= wkSheet.Dimension.End.Column; i++)
+                        {
+                            page9TableCell = page9TableRow.AddCell();
+                            page9TableCell.Width = page9TableCell3_4Width;
+                            page9TableCell.AddParagraph().AppendText($"{(double)Math.Truncate(double.Parse(wkSheet.Cells[1, i].Text))}\n$").CharacterFormat.Bold = true;
+                            page9Table.Rows[0].Cells[page9StartCell].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
+                            page9StartCell++;
+                        }
+
+                        // add the rows of data into table now
+                        page9TableRow = page9Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                        page9TableRowCount++;
+
+                        // add TradeReceivables Data
+                        page9TableCell = page9TableRow.AddCell();
+                        page9TableCell.Width = page9TableCell1Width;
+                        page9TableCell.AddParagraph().AppendText($"INCOME").CharacterFormat.Bold = true;
+                        page9Table.Rows[page9Table.Rows.Count - 1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+
+                        // add middle cell
+                        page9TableCell = page9TableRow.AddCell();
+                        page9TableCell.Width = page9TableCell2Width;
+
+                        // add additional columns (to max number in sheet)
+                        for (int i = page9StartCell - 1; i <= page9StartCell; i++)
+                        {
+                            page9TableCell = page9TableRow.AddCell();
+                            page9TableCell.Width = page9TableCell3_4Width;
+                        }
+
+                        // add all the rows of data under the header row for this particular worksheet now
+                        for (int i = 2; i <= wkSheet.Dimension.End.Row; i++)
+                        {
+                            page9TableRow = page9Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                            page9TableRowCount++;
+
+                            page9TableCell = page9TableRow.AddCell();
+                            page9TableCell.Width = page9TableCell1Width;
+                            page9TableCell.AddParagraph().AppendText($"\u00A0\u00A0{wkSheet.Cells[i, 1].Text}");
+                            page9Table.Rows[page9TableRowCount - 1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+
+                            page9TableCell = page9TableRow.AddCell();
+                            page9TableCell.Width = page9TableCell2Width;
+                            page9TableCell.AddParagraph().AppendText($"{wkSheet.Cells[i, 2].Text}");
+                            page9Table.Rows[page9TableRowCount - 1].Cells[1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+
+                            for (int j = page9StartCell - 1; j <= page9StartCell; j++)
+                            {
+                                page9TableCell = page9TableRow.AddCell();
+                                page9TableCell.Width = page9TableCell3_4Width;
+                                page9TableCell.AddParagraph().AppendText($"{((double)Math.Truncate(double.Parse(wkSheet.Cells[i, j].Text))).ToString("C", CultureInfo.CurrentCulture)}");
+                                page9Table.Rows[page9TableRowCount-1].Cells[j-1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                                
+                                // add to the rolling column count
+                                if (j == page9StartCell - 1)
+                                {
+                                    notesIncomeTotalThisYear = notesIncomeTotalThisYear + (double)Math.Truncate(double.Parse(wkSheet.Cells[i, j].Text));
+                                }
+                                else
+                                {
+                                    notesIncomeTotalLastYear = notesIncomeTotalLastYear + (double)Math.Truncate(double.Parse(wkSheet.Cells[i, j].Text));
+                                }
+                            }
+                        }
+
+                        // add blank row
+                        page9TableRow = page9Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                        page9TableRowCount++;
+                        page9TableCell = page9TableRow.AddCell();
+                        page9TableCell.Width = page9TableCell1Width;
+                        page9TableCell = page9TableRow.AddCell();
+                        page9TableCell.Width = page9TableCell2Width;
+                        for (int i = 2; i < wkSheet.Dimension.End.Column; i++)
+                        {
+                            page9TableCell = page9TableRow.AddCell();
+                            page9TableCell.Width = page9TableCell3_4Width;
+                        }
+
+                        // add Income Total Notes row
+                        page9TableRow = page9Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                        page9TableRowCount++;
+                        page9TableCell = page9TableRow.AddCell();
+                        page9TableCell.Width = page9TableCell1Width;
+                        page9TableCell.AddParagraph().AppendText($"Total Income").CharacterFormat.Bold = true;
+                        page9Table.Rows[page9Table.Rows.Count - 1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                        
+                        page9TableCell = page9TableRow.AddCell();
+                        page9TableCell.Width = page9TableCell2Width;
+                        for (int i = 2; i < wkSheet.Dimension.End.Column; i++)
+                        {
+                            page9TableCell = page9TableRow.AddCell();
+                            page9TableCell.Width = page9TableCell3_4Width;
+                            if (i == 2)
+                            {
+                                page9TableCell.AddParagraph().AppendText($"{((double)Math.Truncate(notesIncomeTotalThisYear)).ToString("C", CultureInfo.CurrentCulture)}");
+                                page9Table.Rows[page9Table.Rows.Count - 1].Cells[i].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                            }
+                            else
+                            {
+                                page9TableCell.AddParagraph().AppendText($"{((double)Math.Truncate(notesIncomeTotalLastYear)).ToString("C", CultureInfo.CurrentCulture)}");
+                                page9Table.Rows[page9Table.Rows.Count - 1].Cells[i].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                            }
+                        }
+
+                        IWParagraph page09EndParagraph = page09.AddParagraph();
+                        page09EndParagraph.AppendText($"\n\nThese notes should be read in conjunction with the attached compilation report.");
+                        page09EndParagraph.ApplyStyle("Page03Style02");
+                        page09EndParagraph.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
+                    }
+                }
+                #endregion Page09
+
+#region Page10
+                // Page10 - Compilation Report
+                IWSection page10 = wordDocument.AddSection();
+
+                // Page10 - Page Setup
+                page10.PageSetup.Orientation = PageOrientation.Portrait;
+                page10.PageSetup.Margins.All = 36;
+
+                // Page10 - Paragraph Style 01 (Title)
+                IWParagraphStyle page10Style01 = wordDocument.AddParagraphStyle("Page10Style01");
+                page10Style01.ParagraphFormat.BackColor = Color.White;
+                page10Style01.ParagraphFormat.AfterSpacing = 16f;
+                page10Style01.ParagraphFormat.BeforeSpacing = 16f;
+                page10Style01.ParagraphFormat.LineSpacing = 14f;
+                page10Style01.CharacterFormat.FontName = "Times New Roman";
+                page10Style01.CharacterFormat.FontSize = 14f;
+                page10Style01.CharacterFormat.Bold = true;
+
+                // Page10 - Paragraph Style 02 (Body)
+                IWParagraphStyle page10Style02 = wordDocument.AddParagraphStyle("Page10Style02");
+                page10Style02.ParagraphFormat.BackColor = Color.White;
+                page10Style02.ParagraphFormat.AfterSpacing = 0f;
+                page10Style02.ParagraphFormat.BeforeSpacing = 0f;
+                page10Style02.ParagraphFormat.LineSpacing = 12f;
+                page10Style02.CharacterFormat.FontName = "Times New Roman";
+                page10Style02.CharacterFormat.FontSize = 12f;
+                page10Style02.CharacterFormat.Bold = false;
+
+                // Page10 - Paragraph Style 02 (Body-Bold)
+                IWParagraphStyle page10Style02Bold = wordDocument.AddParagraphStyle("Page10Style02Bold");
+                page10Style02Bold.ParagraphFormat.BackColor = Color.White;
+                page10Style02Bold.ParagraphFormat.AfterSpacing = 6f;
+                page10Style02Bold.ParagraphFormat.BeforeSpacing = 0f;
+                page10Style02Bold.ParagraphFormat.LineSpacing = 12f;
+                page10Style02Bold.CharacterFormat.FontName = "Times New Roman";
+                page10Style02Bold.CharacterFormat.FontSize = 12f;
+                page10Style02Bold.CharacterFormat.Bold = true;
+
+                // Page10 - Title Paragraph
+                IWParagraph page10TitleParagraph = page10.AddParagraph();
+
+                page10TitleParagraph.AppendText($"{clientName.ToUpperInvariant()}");
+                page10TitleParagraph.AppendBreak(BreakType.LineBreak);
+                page10TitleParagraph.AppendText(companyAbnAcn);
+                page10TitleParagraph.AppendBreak(BreakType.LineBreak);
+                page10TitleParagraph.AppendBreak(BreakType.LineBreak);
+                page10TitleParagraph.AppendText("profit and loss statement".ToUpperInvariant());
+                page10TitleParagraph.AppendBreak(BreakType.LineBreak);
+                page10TitleParagraph.AppendText("for the year ended".ToUpperInvariant());
+                page10TitleParagraph.AppendBreak(BreakType.LineBreak);
+                page10TitleParagraph.AppendText("30 june 2021".ToUpperInvariant());
+                page10TitleParagraph.AppendBreak(BreakType.LineBreak);
+
+                // Page10 - HR
+                page10TitleParagraph.AppendText("__________________________________________________________________________");
+                page10TitleParagraph.ApplyStyle("Page10Style01");
+                page10TitleParagraph.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
+
+                // Page10 - Initialise table
+                IWTable page10Table = page10.AddTable();
+                page10Table.TableFormat.Borders.BorderType = BorderStyle.None;
+                page10Table.TableFormat.HorizontalAlignment = RowAlignment.Center;
+                int page10TableRowCount = 0;
+
+                // Page10 - add first row into table
+                WTableRow page10TableRow = page10Table.AddRow();
+                page10TableRowCount++;
+                int page10TableCell1Width = 270;
+                int page10TableCell2Width = 70;
+                int page10TableCell3_4Width = 90;
+
+                // add cells to first row (heading row)
+                // this will iterate through all the sheets with the name (regex)^NOTES_.* until it finds one, to add this page to the document 
+                WTableCell page10TableCell = page10TableRow.AddCell();
+                page10TableCell.Width = page10TableCell1Width;
+                page10TableCell = page10TableRow.AddCell();
+                page10TableCell.AddParagraph().AppendText("NOTE\n").CharacterFormat.Bold = true;
+                page10TableCell.Width = page10TableCell2Width;
+                page10Table.Rows[0].Cells[1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
+                int page10StartCell = 2;
+
+                foreach (ExcelWorksheet wkSheet in package.Workbook.Worksheets)
+                {
+                    if (wkSheet.Name.ToString().ToLower() == "NOTES_Expenses".ToLower())
+                    {
+                        double notesExpensesTotalThisYear = 0;
+                        double notesExpensesTotalLastYear = 0;
+
+                        // loop through  the heading row to get the dates and add them, if this exists
+                        for (int i = 3; i <= wkSheet.Dimension.End.Column; i++)
+                        {
+                            page10TableCell = page10TableRow.AddCell();
+                            page10TableCell.Width = page10TableCell3_4Width;
+                            page10TableCell.AddParagraph().AppendText($"{(double)Math.Truncate(double.Parse(wkSheet.Cells[1, i].Text))}\n$").CharacterFormat.Bold = true;
+                            page10Table.Rows[0].Cells[page10StartCell].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
+                            page10StartCell++;
+                        }
+
+                        // add the rows of data into table now
+                        page10TableRow = page10Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                        page10TableRowCount++;
+
+                        // add TradeReceivables Data
+                        page10TableCell = page10TableRow.AddCell();
+                        page10TableCell.Width = page10TableCell1Width;
+                        page10TableCell.AddParagraph().AppendText($"EXPENSES").CharacterFormat.Bold = true;
+                        page10Table.Rows[page10Table.Rows.Count - 1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+
+                        // add middle cell
+                        page10TableCell = page10TableRow.AddCell();
+                        page10TableCell.Width = page10TableCell2Width;
+
+                        // add additional columns (to max number in sheet)
+                        for (int i = page10StartCell - 1; i <= page10StartCell; i++)
+                        {
+                            page10TableCell = page10TableRow.AddCell();
+                            page10TableCell.Width = page10TableCell3_4Width;
+                        }
+
+                        // add all the rows of data under the header row for this particular worksheet now
+                        for (int i = 2; i <= wkSheet.Dimension.End.Row; i++)
+                        {
+                            page10TableRow = page10Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                            page10TableRowCount++;
+
+                            page10TableCell = page10TableRow.AddCell();
+                            page10TableCell.Width = page10TableCell1Width;
+                            page10TableCell.AddParagraph().AppendText($"\u00A0\u00A0{wkSheet.Cells[i, 1].Text}");
+                            page10Table.Rows[page10TableRowCount - 1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+
+                            page10TableCell = page10TableRow.AddCell();
+                            page10TableCell.Width = page10TableCell2Width;
+                            page10TableCell.AddParagraph().AppendText($"{wkSheet.Cells[i, 2].Text}");
+                            page10Table.Rows[page10TableRowCount - 1].Cells[1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+
+                            for (int j = page10StartCell - 1; j <= page10StartCell; j++)
+                            {
+                                page10TableCell = page10TableRow.AddCell();
+                                page10TableCell.Width = page10TableCell3_4Width;
+                                page10TableCell.AddParagraph().AppendText($"{((double)Math.Truncate(double.Parse(wkSheet.Cells[i, j].Text))).ToString("C", CultureInfo.CurrentCulture)}");
+                                page10Table.Rows[page10TableRowCount-1].Cells[j-1].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                                
+                                // add to the rolling column count
+                                if (j == page10StartCell - 1)
+                                {
+                                    notesExpensesTotalThisYear = notesExpensesTotalThisYear + (double)Math.Truncate(double.Parse(wkSheet.Cells[i, j].Text));
+                                }
+                                else
+                                {
+                                    notesExpensesTotalLastYear = notesExpensesTotalLastYear + (double)Math.Truncate(double.Parse(wkSheet.Cells[i, j].Text));
+                                }
+                            }
+                        }
+
+                        // add blank row
+                        page10TableRow = page10Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                        page10TableRowCount++;
+                        page10TableCell = page10TableRow.AddCell();
+                        page10TableCell.Width = page10TableCell1Width;
+                        page10TableCell = page10TableRow.AddCell();
+                        page10TableCell.Width = page10TableCell2Width;
+                        for (int i = 2; i < wkSheet.Dimension.End.Column; i++)
+                        {
+                            page10TableCell = page10TableRow.AddCell();
+                            page10TableCell.Width = page10TableCell3_4Width;
+                        }
+
+                        // add Income Total Notes row
+                        page10TableRow = page10Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                        page10TableRowCount++;
+                        page10TableCell = page10TableRow.AddCell();
+                        page10TableCell.Width = page10TableCell1Width;
+                        page10TableCell.AddParagraph().AppendText($"Total Expenses").CharacterFormat.Bold = true;
+                        page10Table.Rows[page10Table.Rows.Count - 1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                        
+                        page10TableCell = page10TableRow.AddCell();
+                        page10TableCell.Width = page10TableCell2Width;
+                        for (int i = 2; i < wkSheet.Dimension.End.Column; i++)
+                        {
+                            page10TableCell = page10TableRow.AddCell();
+                            page10TableCell.Width = page10TableCell3_4Width;
+                            if (i == 2)
+                            {
+                                page10TableCell.AddParagraph().AppendText($"{((double)Math.Truncate(notesExpensesTotalThisYear)).ToString("C", CultureInfo.CurrentCulture)}");
+                                page10Table.Rows[page10Table.Rows.Count - 1].Cells[i].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                            }
+                            else
+                            {
+                                page10TableCell.AddParagraph().AppendText($"{((double)Math.Truncate(notesExpensesTotalLastYear)).ToString("C", CultureInfo.CurrentCulture)}");
+                                page10Table.Rows[page10Table.Rows.Count - 1].Cells[i].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                            }
+                        }
+
+                        // add Profit Before Income Tax row
+                        page10TableRow = page10Table.AddRow(isCopyFormat: true, autoPopulateCells: false);
+                        page10TableRowCount++;
+                        page10TableCell = page10TableRow.AddCell();
+                        page10TableCell.Width = page10TableCell1Width;
+                        page10TableCell.AddParagraph().AppendText($"Profit Before Income Tax").CharacterFormat.Bold = true;
+                        page10Table.Rows[page10Table.Rows.Count - 1].Cells[0].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+                        page10TableCell = page10TableRow.AddCell();
+                        page10TableCell.Width = page10TableCell2Width;
+
+                        for (int i = 2; i < wkSheet.Dimension.End.Column; i++)
+                        {
+                            page10TableCell = page10TableRow.AddCell();
+                            page10TableCell.Width = page10TableCell3_4Width;
+                            if (i == 2)
+                            {
+                                page10TableCell.AddParagraph().AppendText($"{((double)Math.Truncate(((double)revenueTotalColumnC + (double)expenseTotalColumnC))).ToString("C", CultureInfo.CurrentCulture)}");
+                                page10Table.Rows[page10Table.Rows.Count - 1].Cells[i].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                            }
+                            else
+                            {
+                                page10TableCell.AddParagraph().AppendText($"{((double)Math.Truncate(((double)revenueTotalColumnD + (double)expenseTotalColumnD))).ToString("C", CultureInfo.CurrentCulture)}");
+                                page10Table.Rows[page10Table.Rows.Count - 1].Cells[i].Paragraphs[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Right;
+                            }
+                        }
+
+                        IWParagraph page10EndParagraph = page10.AddParagraph();
+                        page10EndParagraph.AppendText($"\n\nThese notes should be read in conjunction with the attached compilation report.");
+                        page10EndParagraph.ApplyStyle("Page03Style02");
+                        page10EndParagraph.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
+                    }
+                }
+                #endregion Page10
 
                 // Saves the Word document to MemoryStream
                 MemoryStream stream = new MemoryStream();
